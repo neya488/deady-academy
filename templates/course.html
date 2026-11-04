@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY ACADEMY - Ders</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.lesson {
+background:#171722;
+border:1px solid #9333ea;
+border-radius:12px;
+padding:20px;
+margin:15px auto;
+max-width:650px;
+text-align:left;
+}
+.lesson a { color:white; text-decoration:none; }
+.lesson a:hover { color:#c084fc; }
+pre {
+background:#08080d;
+padding:15px;
+overflow-x:auto;
+border-radius:8px;
+color:#c084fc;
+}
+</style>
+</head>
+<body>
+<header>
+<h2>DEADY <span>ACADEMY</span></h2>
+<a href="/dashboard">Öğrenci Paneli</a>
+</header>
+<main>
+<h1>{{ course.title }}</h1>
+<p>{{ course.description }}</p>
+<h2>DERS PROGRAMI</h2>
+
+{% for lesson in course.lessons %}
+<div class="lesson">
+<h3>{{ loop.index }}. {{ lesson[0] }}</h3>
+<p>{{ lesson[1] }}</p>
+<pre>{{ lesson[2] }}</pre>
+</div>
+{% endfor %}
+
+<a class="button" href="/dashboard">EĞİTİMLERE DÖN</a>
+</main>
+</body>
+</html>

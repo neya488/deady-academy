@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY AI</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.chat {
+max-width:650px;
+margin:30px auto;
+padding:20px;
+background:#171722;
+border:1px solid #9333ea;
+border-radius:15px;
+}
+#messages {
+height:350px;
+overflow-y:auto;
+text-align:left;
+padding:10px;
+}
+.message {
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+background:#252538;
+}
+input {
+width:70%;
+padding:12px;
+border-radius:8px;
+}
+button {
+padding:12px;
+background:#9333ea;
+color:white;
+border:0;
+border-radius:8px;
+}
+</style>
+</head>
+<body>
+<header>
+<h2>DEADY <span>AI</span></h2>
+<a href="/dashboard">Öğrenci Paneli</a>
+</header>
+
+<div class="chat">
+<h1>🤖 DEADY AI</h1>
+<p>Yapay zekâ öğretmeninle konuş!</p>
+
+<div id="messages">
+<div class="message">Merhaba! Ben DEADY AI. Sana nasıl yardımcı olabilirim?</div>
+</div>
+
+<input id="question" placeholder="Sorunu yaz...">
+<button onclick="sendMessage()">Gönder</button>
+</div>
+
+<script>
+function sendMessage() {
+const input = document.getElementById("question");
+const messages = document.getElementById("messages");
+const question = input.value.trim();
+
+if (!question) return;
+
+messages.innerHTML +=
+'<div class="message"><b>Sen:</b> ' + escapeHtml(question) + '</div>';
+
+input.value = "";
+messages.scrollTop = messages.scrollHeight;
+
+fetch("/ask-ai", {
+method: "POST",
+headers: {"Content-Type": "application/json"},
+body: JSON.stringify({question: question})
+})
+.then(response => response.json())
+.then(data => {
+messages.innerHTML +=
+'<div class="message"><b>DEADY AI:</b> ' +
+escapeHtml(data.answer || data.error || "Yanıt alınamadı.") +
+'</div>';
+messages.scrollTop = messages.scrollHeight;
+})
+.catch(() => {
+messages.innerHTML +=
+'<div class="message">Bağlantı hatası oluştu.</div>';
+});
+}
+
+function escapeHtml(text) {
+const div = document.createElement("div");
+div.textContent = text;
+return div.innerHTML;
+}
+</script>
+</body>
+</html>
+

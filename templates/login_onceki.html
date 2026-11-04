@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY ACADEMY - Giriş</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main>
+<h1>DEADY <span>ACADEMY</span></h1>
+<h2>ÖĞRENCİ GİRİŞİ</h2>
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+{% endwith %}
+<form method="POST">
+<input type="email" name="email" placeholder="E-posta adresin" required>
+<input type="password" name="password" placeholder="Şifren" required>
+<button class="button" type="submit">GİRİŞ YAP</button>
+</form>
+<p>Hesabın yok mu? <a href="/register">Kayıt Ol</a></p>
+</main>
+</body>
+</html>

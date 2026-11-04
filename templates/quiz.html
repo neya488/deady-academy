@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY ACADEMY - Sınav</title>
+<style>
+body {
+    background:#08080d;
+    color:white;
+    font-family:Arial;
+    padding:20px;
+}
+main {
+    max-width:700px;
+    margin:30px auto;
+}
+.question {
+    background:#171722;
+    border:1px solid #9333ea;
+    border-radius:12px;
+    padding:18px;
+    margin:18px 0;
+}
+label {
+    display:block;
+    padding:10px;
+    cursor:pointer;
+}
+button {
+    background:#9333ea;
+    color:white;
+    border:0;
+    padding:14px 25px;
+    border-radius:9px;
+    font-size:16px;
+    cursor:pointer;
+}
+a { color:#c084fc; }
+</style>
+</head>
+<body>
+<main>
+<h1>🏆 {{ title }} Sınavı</h1>
+<p>Her doğru cevap 10 puan kazandırır.</p>
+
+<form method="POST">
+{% for question in questions %}
+<div class="question">
+<h3>{{ loop.index }}. {{ question.question }}</h3>
+
+{% for option in question.options %}
+<label>
+<input type="radio" name="q{{ loop.index0 }}" value="{{ loop.index0 }}" required>
+{{ option }}
+</label>
+{% endfor %}
+</div>
+{% endfor %}
+
+<button type="submit">SINAVI TAMAMLA</button>
+</form>
+
+<p><a href="/dashboard">← Öğrenci Paneline Dön</a></p>
+</main>
+</body>
+</html>

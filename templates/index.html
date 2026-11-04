@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY SALVO | Üyelik</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: #08060d;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #30203e;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h2 {
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+header span { color: #c084fc; }
+
+.nav-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-buttons a {
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.login-btn {
+    color: #c084fc;
+    border: 1px solid #a855f7;
+}
+
+.login-btn:hover {
+    background: #9333ea;
+    color: white;
+    box-shadow: 0 0 18px #9333ea;
+}
+
+.register-btn {
+    color: white;
+    background: linear-gradient(135deg, #9333ea, #c026d3);
+    box-shadow: 0 0 12px #9333ea66;
+}
+
+.register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px #c026d3;
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 65px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(42px, 9vw, 75px);
+    letter-spacing: 5px;
+    color: #c084fc;
+    text-shadow: 0 0 25px #9333ea;
+}
+
+.subtitle {
+    color: #b8afc5;
+    margin-bottom: 45px;
+}
+
+.packages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+}
+
+.package {
+    background: #15101e;
+    border: 1px solid #67349a;
+    border-radius: 15px;
+    padding: 25px 15px;
+    transition: .2s;
+}
+
+.package:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 22px #7024a8;
+}
+
+.package h2 { color: #c084fc; }
+
+.price {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.package p {
+    color: #c5bbd0;
+    min-height: 45px;
+}
+
+.button {
+    display: inline-block;
+    background: #9333ea;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    color: #82778e;
+    padding: 25px;
+}
+
+@media (max-width: 480px) {
+    .nav-buttons a {
+        padding: 10px 12px;
+        font-size: 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>DEADY <span>SALVO</span></h2>
+
+    <nav class="nav-buttons">
+        <a class="login-btn" href="/login">GİRİŞ YAP</a>
+        <a class="register-btn" href="/register">KAYIT OL</a>
+    </nav>
+</header>
+
+<main>
+    <h1>DEADY SALVO</h1>
+    <p class="subtitle">Üyeliğini seç. Ayrıcalıklarını keşfet.</p>
+
+    <section class="packages">
+
+        <div class="package">
+            <h2>BAŞLANGIÇ</h2>
+            <div class="price">ÜCRETSİZ</div>
+            <p>Standart üyelik ve profil erişimi</p>
+            <a class="button" href="/register">SEÇ</a>
+        </div>
+
+        <div class="package">
+            <h2>GÜMÜŞ</h2>
+            <div class="price">99 TL / AY</div>
+            <p>Gümüş üyelik ayrıcalıkları</p>
+            <a class="button" href="/register">SEÇ</a>
+        </div>
+
+        <div class="package">
+            <h2>ALTIN</h2>
+            <div class="price">199 TL / AY</div>
+            <p>Altın üyelik ve özel içerikler</p>
+            <a class="button" href="/register">SEÇ</a>
+        </div>
+
+        <div class="package">
+            <h2>ELMAS</h2>
+            <div class="price">349 TL / AY</div>
+            <p>VIP alan ve elmas ayrıcalıkları</p>
+            <a class="button" href="/register">SEÇ</a>
+        </div>
+
+        <div class="package">
+            <h2>EFSANE</h2>
+            <div class="price">599 TL / AY</div>
+            <p>Tüm premium ayrıcalıklar</p>
+            <a class="button" href="/register">SEÇ</a>
+        </div>
+
+    </section>
+</main>
+
+<footer>© 2026 DEADY SALVO</footer>
+
+</body>
+</html>
+

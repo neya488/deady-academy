@@ -1,0 +1,11 @@
+academy.db
+*.db
+__pycache__/
+*.pyc
+app_*yedek.py
+app_hata_yedek.py
+app_egitim_yedek.py
+app_son_hali_yedek.py
+duzelt.py
+.env
+app_onceki.py

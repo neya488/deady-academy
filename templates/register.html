@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY SALVO | Kayıt Ol</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: radial-gradient(ellipse at top, #32104c, #09060f 65%);
+    color: white;
+    font-family: Arial, sans-serif;
+}
+.card {
+    width: 100%;
+    max-width: 420px;
+    padding: 38px 28px;
+    background: rgba(24, 15, 36, .92);
+    border: 1px solid #7136a0;
+    border-radius: 22px;
+    box-shadow: 0 0 45px #8b27c544;
+    text-align: center;
+}
+.logo {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: white;
+    text-shadow: 0 0 18px #a855f7;
+}
+.logo span { color: #c084fc; }
+.subtitle { color: #a99ab8; font-size: 13px; margin: 12px 0 30px; }
+h2 { letter-spacing: 2px; margin-bottom: 25px; }
+.field { text-align: left; margin-bottom: 18px; }
+label {
+    display: block;
+    color: #c084fc;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 9px;
+    letter-spacing: 1px;
+}
+input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #49305e;
+    background: #0e0a15;
+    color: white;
+    outline: none;
+    font-size: 15px;
+}
+input:focus {
+    border-color: #bd65ff;
+    box-shadow: 0 0 12px #9333ea66;
+}
+.password-wrap { display: flex; gap: 7px; }
+.password-wrap input { min-width: 0; }
+.show {
+    background: #30203e;
+    color: #d8b4fe;
+    border: 1px solid #70449a;
+    border-radius: 9px;
+    padding: 0 12px;
+}
+.submit {
+    width: 100%;
+    padding: 16px;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    background: linear-gradient(110deg, #7e22ce, #c026d3);
+    box-shadow: 0 0 20px #9333ea66;
+    cursor: pointer;
+    margin-top: 8px;
+}
+.submit:hover { box-shadow: 0 0 30px #c026d3; }
+.message { color: #f0abfc; font-size: 13px; margin: 10px 0; }
+.bottom { color: #a99ab8; font-size: 14px; margin-top: 25px; }
+a { color: #d8b4fe; text-decoration: none; font-weight: bold; }
+a:hover { color: white; }
+.back { display: block; margin-top: 20px; color: #8e7a9e; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">DEADY <span>SALVO</span></div>
+    <p class="subtitle">KENDİ DÜNYANI OLUŞTUR</p>
+    <h2>HESAP OLUŞTUR</h2>
+
+    {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+    <p class="message">{{ message }}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="field">
+            <label>KULLANICI ADI</label>
+            <input type="text" name="username"
+                   placeholder="Kullanıcı adını belirle"
+                   minlength="3" maxlength="20"
+                   pattern="[A-Za-z0-9_]{3,20}"
+                   autocomplete="username" required>
+        </div>
+
+        <div class="field">
+            <label>ŞİFRE</label>
+            <div class="password-wrap">
+                <input id="password" type="password" name="password"
+                       placeholder="En az 8 karakter"
+                       minlength="8" autocomplete="new-password" required>
+                <button class="show" type="button"
+                        onclick="togglePassword()">GÖSTER</button>
+            </div>
+        </div>
+
+        <button class="submit" type="submit">HESAP OLUŞTUR</button>
+    </form>
+
+    <p class="bottom">Zaten hesabın var mı? <a href="/login">GİRİŞ YAP</a></p>
+    <a class="back" href="/">← ANA SAYFAYA DÖN</a>
+</div>
+
+<script>
+function togglePassword() {
+    const field = document.getElementById("password");
+    field.type = field.type === "password" ? "text" : "password";
+}
+</script>
+</body>
+</html>
+
