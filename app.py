@@ -790,16 +790,42 @@ def logout():
 @admin_required
 def admin():
     db = get_db()
-    users = db.execute(
-        "SELECT id, username, membership FROM deady_users ORDER BY id DESC"
-    ).fetchall()
-    total_users = len(users)
+
+    users = db.execute("""
+        SELECT id, username, membership, pending_membership,
+               coins, xp, level
+        FROM deady_users
+        ORDER BY id DESC
+    """).fetchall()
+
+    stats = db.execute("""
+        SELECT
+            COUNT(*) AS total_users,
+            COALESCE(SUM(xp), 0) AS total_xp,
+            COALESCE(SUM(coins), 0) AS total_coins,
+            COALESCE(SUM(
+                CASE WHEN pending_membership IS NOT NULL
+                AND pending_membership != '' THEN 1 ELSE 0 END
+            ), 0) AS pending_count
+        FROM deady_users
+    """).fetchone()
+
+    membership_counts = db.execute("""
+        SELECT membership, COUNT(*) AS total
+        FROM deady_users
+        GROUP BY membership
+    """).fetchall()
+
     db.close()
 
     return render_template(
         "admin.html",
         users=users,
-        total_users=total_users
+        total_users=stats["total_users"],
+        total_xp=stats["total_xp"],
+        total_coins=stats["total_coins"],
+        pending_count=stats["pending_count"],
+        membership_counts=membership_counts
     )
 
 init_db()

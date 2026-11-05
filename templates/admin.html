@@ -3,52 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEADY ACADEMY | Admin</title>
+<title>DEADY SALVO | Control Center</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b0b0f;color:white;font-family:Arial,sans-serif;padding:20px}
-.container{max-width:950px;margin:auto}
-h1{color:#00e5ff}
-.card{background:#17171f;padding:22px;border-radius:14px;margin:20px 0;border:1px solid #292936}
-.count{font-size:38px;font-weight:bold;color:#00e5ff}
-table{width:100%;border-collapse:collapse}
-th,td{padding:13px;text-align:left;border-bottom:1px solid #333}
-th{color:#00e5ff}
-a{color:#00e5ff;text-decoration:none}
-.small{color:#aaa}
+:root{
+ --bg:#09090c;--panel:#121217;--panel2:#181820;
+ --gold:#d9b66f;--gold2:#f4dfaa;--red:#8d2438;
+ --text:#f4f1eb;--muted:#92909b;--line:#292832;
+}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+ width:245px;background:#0d0d12;border-right:1px solid var(--line);
+ padding:28px 18px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;
+}
+.brand{font-size:21px;font-weight:900;letter-spacing:2px;color:var(--gold2)}
+.brand small{display:block;font-size:9px;color:var(--muted);letter-spacing:4px;margin-top:7px}
+.side-label{font-size:10px;color:#777482;letter-spacing:2px;margin:42px 12px 13px}
+.nav a{
+ display:flex;align-items:center;gap:12px;text-decoration:none;color:#aaa8b2;
+ padding:13px 14px;border-radius:12px;margin:5px 0;font-size:13px;
+ transition:.2s
+}
+.nav a.active,.nav a:hover{background:linear-gradient(100deg,#302719,#19161a);color:var(--gold2);border:1px solid #51412a}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:18px}
+.sidebar-bottom a{color:#aaa8b2;text-decoration:none;font-size:13px}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px 34px 45px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:34px}
+.breadcrumb{font-size:12px;color:var(--muted)}
+.breadcrumb b{color:var(--gold)}
+.status{border:1px solid #34543e;background:#14231a;color:#8de0a4;border-radius:30px;padding:9px 13px;font-size:11px}
+.status i{display:inline-block;width:7px;height:7px;background:#62d982;border-radius:50%;margin-right:7px}
+.hero{margin-bottom:27px}
+.eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:10px}
+h1{font-size:clamp(27px,4vw,38px);margin:0 0 9px;letter-spacing:-1px}
+.hero p{color:var(--muted);font-size:13px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}
+.stat,.panel{background:linear-gradient(145deg,#17171e,#101015);border:1px solid var(--line);border-radius:17px}
+.stat{padding:20px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:#d9b66f0d;right:-25px;top:-30px}
+.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.stat-icon{font-size:18px}
+.stat-number{font-size:29px;font-weight:800;color:var(--gold2);margin-top:17px}
+.stat-note{font-size:10px;color:#777482;margin-top:6px}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-bottom:18px}
+.panel{padding:21px;margin-bottom:18px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.panel h2{font-size:14px;margin:0}
+.panel-sub{font-size:10px;color:var(--muted)}
+.tag{font-size:10px;color:var(--gold2);background:#d9b66f16;border:1px solid #55452d;padding:6px 9px;border-radius:20px}
+.membership-row{margin:15px 0}
+.membership-info{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}
+.membership-info span:last-child{color:var(--gold2)}
+.track{height:7px;background:#292832;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#76532a,var(--gold2));border-radius:20px}
+.pending-empty{padding:24px;text-align:center;color:var(--muted);font-size:12px;background:#0d0d12;border:1px dashed #34313c;border-radius:12px}
+.pending-list{display:grid;gap:10px}
+.pending-item{padding:12px;border-radius:11px;background:#0d0d12;border:1px solid var(--line);font-size:12px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{text-align:left;color:#898692;font-size:10px;letter-spacing:1px;padding:13px 11px;border-bottom:1px solid var(--line)}
+td{padding:14px 11px;border-bottom:1px solid #24232c;font-size:12px;color:#d6d3dc}
+tr:hover td{background:#ffffff05}
+.member-name{color:var(--gold2);font-weight:700}
+.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#d9b66f16;color:var(--gold2);font-size:10px}
+.search{width:100%;max-width:270px;background:#0b0b10;border:1px solid var(--line);padding:11px 13px;border-radius:10px;color:white;outline:none}
+.search:focus{border-color:var(--gold)}
+.footer{text-align:center;color:#65636e;font-size:10px;padding-top:15px}
+@media(max-width:950px){
+ .sidebar{width:190px}.main{margin-left:190px;width:calc(100% - 190px);padding:25px 20px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .layout{display:block}.sidebar{position:relative;width:100%;height:auto;padding:17px 18px;border-right:0;border-bottom:1px solid var(--line)}
+ .brand{font-size:18px}.side-label{display:none}.nav{display:flex;gap:7px;margin-top:15px;overflow-x:auto}
+ .nav a{white-space:nowrap;margin:0;padding:10px 12px;font-size:11px}
+ .sidebar-bottom{display:none}.main{margin:0;width:100%;padding:23px 14px}
+ .stats{gap:10px}.stat{padding:15px}.stat-number{font-size:24px}
+ .columns{grid-template-columns:1fr}.topbar{margin-bottom:25px}
+ .panel{padding:16px}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>⚡ DEADY ACADEMY</h1>
-<p class="small">Yönetici Kontrol Paneli</p>
+<div class="layout">
+ <aside class="sidebar">
+  <div class="brand">DEADY SALVO<small>BLACK EMPIRE</small></div>
+  <div class="side-label">YÖNETİM</div>
+  <nav class="nav">
+   <a class="active" href="/admin">◈ &nbsp; Genel Bakış</a>
+   <a href="#statistics">▦ &nbsp; İstatistikler</a>
+   <a href="#members">♙ &nbsp; Üyeler</a>
+   <a href="#applications">♢ &nbsp; Başvurular</a>
+  </nav>
+  <div class="sidebar-bottom">
+   <a href="/dashboard">← Öğrenci paneline dön</a>
+  </div>
+ </aside>
 
-<div class="card">
-<p>TOPLAM ÜYE</p>
-<div class="count">{{ total_users }}</div>
-</div>
+ <main class="main">
+  <div class="topbar">
+   <div class="breadcrumb">DEADY SALVO / <b>CONTROL CENTER</b></div>
+   <div class="status"><i></i>SİSTEM AKTİF</div>
+  </div>
 
-<div class="card">
-<h2>👥 Üye Listesi</h2>
-<table>
-<tr>
-<th>ID</th>
-<th>Kullanıcı Adı</th>
-<th>Üyelik</th>
-</tr>
-{% for user in users %}
-<tr>
-<td>{{ user.id }}</td>
-<td>{{ user.username }}</td>
-<td>{{ user.membership }}</td>
-</tr>
-{% else %}
-<tr><td colspan="3">Henüz üye bulunmuyor.</td></tr>
-{% endfor %}
-</table>
-</div>
+  <section class="hero">
+   <div class="eyebrow">COMMAND & CONTROL</div>
+   <h1>Yönetim Merkezi</h1>
+   <p>Platformun genel durumunu, üyelerini ve başvurularını buradan takip et.</p>
+  </section>
 
-<a href="/dashboard">← Kullanıcı Paneline Dön</a>
+  <section class="stats" id="statistics">
+   <div class="stat">
+    <div class="stat-top"><span>TOPLAM ÜYE</span><span class="stat-icon">♙</span></div>
+    <div class="stat-number">{{ total_users }}</div>
+    <div class="stat-note">Kayıtlı hesap sayısı</div>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span>TOPLAM XP</span><span class="stat-icon">✦</span></div>
+    <div class="stat-number">{{ total_xp }}</div>
+    <div class="stat-note">Üyelerin kazandığı deneyim</div>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span>TOPLAM COIN</span><span class="stat-icon">◉</span></div>
+    <div class="stat-number">{{ total_coins }}</div>
+    <div class="stat-note">Üye hesaplarındaki coin</div>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span>BEKLEYEN BAŞVURU</span><span class="stat-icon">♢</span></div>
+    <div class="stat-number">{{ pending_count }}</div>
+    <div class="stat-note">İnceleme bekleyen üyelik talebi</div>
+   </div>
+  </section>
+
+  <section class="columns">
+   <div class="panel">
+    <div class="panel-head">
+     <h2>Üyelik Dağılımı</h2>
+     <span class="tag">GENEL DURUM</span>
+    </div>
+    {% for item in membership_counts %}
+     <div class="membership-row">
+      <div class="membership-info">
+       <span>{{ item.membership or "Belirtilmemiş" }}</span>
+       <span>{{ item.total }} üye</span>
+      </div>
+      <div class="track">
+       <div class="fill" style="width:{{ (item.total * 100 / total_users) if total_users else 0 }}%"></div>
+      </div>
+     </div>
+    {% else %}
+     <div class="pending-empty">Henüz üyelik verisi bulunmuyor.</div>
+    {% endfor %}
+   </div>
+
+   <div class="panel" id="applications">
+    <div class="panel-head">
+     <h2>Üyelik Başvuruları</h2>
+     <span class="tag">{{ pending_count }} BEKLEYEN</span>
+    </div>
+    {% set has_pending = namespace(value=false) %}
+    <div class="pending-list">
+     {% for user in users %}
+      {% if user.pending_membership %}
+       {% set has_pending.value = true %}
+       <div class="pending-item">
+        <strong class="member-name">{{ user.username }}</strong>
+        <span style="color:#999"> → {{ user.pending_membership }}</span>
+       </div>
+      {% endif %}
+     {% endfor %}
+     {% if not has_pending.value %}
+      <div class="pending-empty">Şu anda bekleyen üyelik başvurusu yok.</div>
+     {% endif %}
+    </div>
+   </div>
+  </section>
+
+  <section class="panel" id="members">
+   <div class="panel-head">
+    <div>
+     <h2>Üye Yönetimi</h2>
+     <div class="panel-sub" style="margin-top:6px">Platformdaki kayıtlı hesaplar</div>
+    </div>
+    <input class="search" id="userSearch" onkeyup="searchUsers()" placeholder="Üye ara...">
+   </div>
+   <div class="table-wrap">
+    <table id="userTable">
+     <thead>
+      <tr>
+       <th>ID</th><th>KULLANICI</th><th>ÜYELİK</th>
+       <th>SEVİYE</th><th>XP</th><th>COIN</th><th>BAŞVURU</th>
+      </tr>
+     </thead>
+     <tbody>
+      {% for user in users %}
+      <tr>
+       <td>#{{ user.id }}</td>
+       <td class="member-name">{{ user.username }}</td>
+       <td><span class="pill">{{ user.membership or "BAŞLANGIÇ" }}</span></td>
+       <td>{{ user.level }}</td>
+       <td>{{ user.xp }}</td>
+       <td>{{ user.coins }}</td>
+       <td>{{ user.pending_membership or "—" }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center;color:#888">Henüz üye bulunmuyor.</td></tr>
+      {% endfor %}
+     </tbody>
+    </table>
+   </div>
+  </section>
+
+  <div class="footer">DEADY SALVO © 2026 · BLACK EMPIRE CONTROL CENTER</div>
+ </main>
 </div>
+<script>
+function searchUsers(){
+ const value=document.getElementById("userSearch").value.toLowerCase();
+ document.querySelectorAll("#userTable tbody tr").forEach(row=>{
+  row.style.display=row.innerText.toLowerCase().includes(value)?"":"none";
+ });
+}
+</script>
 </body>
 </html>
