@@ -128,52 +128,54 @@ button {
         <h3>📝 Uygulama Görevi</h3>
         {{ lesson.exercise }}
     <div class="quiz">
-    <h3>🧠 Mini Sınav</h3>
+        <h3>🧠 Mini Sınav</h3>
 
-    <form class="quiz-form">
-        {% for question in lesson.quiz %}
-        {% set qindex = loop.index0 %}
+        <form class="quiz-form">
+            {% for question in lesson.quiz %}
+            {% set qindex = loop.index0 %}
+            <div class="question" data-answer="{{ question.answer }}">
+                <strong>{{ loop.index }}. {{ question.question }}</strong>
 
-        <div class="question">
-            <strong>{{ loop.index }}. {{ question.question }}</strong>
+                {% for option in question.options %}
+                <label>
+                    <input type="radio" name="q{{ qindex }}" value="{{ loop.index0 }}">
+                    {{ option }}
+                </label>
+                {% endfor %}
 
-            {% for option in question.options %}
-            <label>
-                <input type="radio"
-                       name="q{{ qindex }}"
-                       value="{{ loop.index0 }}">
-                {{ option }}
-            </label>
+                <p class="answer-result"></p>
+            </div>
             {% endfor %}
 
-            <p class="answer-result"></p>
-        </div>
-        {% endfor %}
+            <button type="button" class="check-quiz">Cevapları Kontrol Et</button>
+            <h4 class="quiz-score"></h4>
+        </form>
+    </div>
 
-        <button type="button" class="check-quiz">
-            Cevapları Kontrol Et
-        </button>
+</section>
+{% endfor %}
 
-        <h4 class="quiz-score"></h4>
-    </<script>
+<a class="back" href="/dashboard">← Öğrenci Paneline Dön</a>
+
+</main>
+
+<script>
 document.querySelectorAll(".quiz-form").forEach(form => {
     form.querySelector(".check-quiz").addEventListener("click", () => {
         const questions = form.querySelectorAll(".question");
         let correct = 0;
         let wrong = 0;
 
-        questions.forEach((question, index) => {
+        questions.forEach(question => {
             const selected = question.querySelector("input:checked");
             const result = question.querySelector(".answer-result");
-            const correctAnswer = Number(
-                question.dataset.answer
-            );
+            const answer = Number(question.dataset.answer);
 
             if (!selected) {
                 result.textContent = "⚠️ Cevap seçmedin.";
                 result.style.color = "orange";
                 wrong++;
-            } else if (Number(selected.value) === correctAnswer) {
+            } else if (Number(selected.value) === answer) {
                 result.textContent = "✅ Doğru cevap!";
                 result.style.color = "#36e36b";
                 correct++;
@@ -188,33 +190,6 @@ document.querySelectorAll(".quiz-form").forEach(form => {
             `Sonuç: ${correct} doğru, ${wrong} yanlış.`;
     });
 });
-</script>form>
-</div>    <h3>🧠 Mini Sınav</h3>
-
-        {% for question in lesson.quiz %}
-        <div class="question">
-            <strong>{{ loop.index }}. {{ question.question }}</strong>
-
-            {% for option in question.options %}
-            <label>
-                <input type="radio"
-                       name="q{{ loop.index }}_{{ loop.index0 }}"
-                       value="{{ loop.index0 }}">
-                {{ option }}
-            </label>
-            {% endfor %}
-        </div>
-        {% endfor %}
-
-        <p>Mini sınav sorularını cevaplarını kontrol etmek için kullanabilirsin.</p>
-    </div>
-
-</section>
-{% endfor %}
-
-<a class="back" href="/dashboard">← Öğrenci Paneline Dön</a>
-
-</main>
-
+</script>
 </body>
 </html>

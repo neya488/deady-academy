@@ -97,6 +97,12 @@ a:hover { color: white; }
     <div class="logo">DEADY <span>SALVO</span></div>
     <p class="subtitle">KENDİ DÜNYANI OLUŞTUR</p>
     <h2>HESAP OLUŞTUR</h2>
+    <div style="margin:15px 0 22px;padding:14px;border:1px solid #b78b43;border-radius:12px;background:#17120b;">
+        <div style="font-size:11px;color:#c9a45e;letter-spacing:2px;">SEÇİLEN ÜYELİK PAKETİ</div>
+        <div style="font-size:21px;font-weight:900;color:#f5d58b;margin-top:7px;">
+            {{ selected_package|default('BAŞLANGIÇ') }}
+        </div>
+    </div>
 
     {% with messages = get_flashed_messages() %}
     {% for message in messages %}
@@ -105,6 +111,7 @@ a:hover { color: white; }
     {% endwith %}
 
     <form method="POST">
+        <input type="hidden" name="membership" value="{{ selected_package|default('BAŞLANGIÇ') }}">
         <div class="field">
             <label>KULLANICI ADI</label>
             <input type="text" name="username"

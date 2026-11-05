@@ -97,6 +97,50 @@ footer{text-align:center;color:#777;padding:35px}
 </form>
 </section>
 
+<h2 class="section-title">🎯 DEADY GÜNLÜK GÖREVLER</h2>
+<section class="extra-grid">
+    <div class="extra">
+        <div style="font-size:38px;margin-bottom:12px;">⚡</div>
+        <h3>Günlük Giriş</h3>
+        <p>Her gün panele giriş yap ve günlük ödülünü al.</p>
+        <b style="color:#c084fc;">ÖDÜL: 25 XP + 10 COIN</b>
+        <p style="color:#ff3030;font-weight:bold;">
+            {% if daily_claimed %}✓ TAMAMLANDI{% else %}◉ BEKLİYOR{% endif %}
+        </p>
+    </div>
+    <div class="extra">
+        <div style="font-size:38px;margin-bottom:12px;">🐍</div>
+        <h3>Python Yolculuğu</h3>
+        <p>Python eğitimine başla ve yeni bilgiler öğren.</p>
+        <a href="/course/python" style="color:#c084fc;font-weight:bold;text-decoration:none;">
+            EĞİTİME BAŞLA →
+        </a>
+    </div>
+    <div class="extra">
+        <div style="font-size:38px;margin-bottom:12px;">🏆</div>
+        <h3>Haftalık Hedef</h3>
+        <p>Hafta boyunca eğitimlerini tamamlayarak kendini geliştir.</p>
+        <b style="color:#c084fc;">YAKINDA</b>
+    </div>
+</section>
+
+<h2 class="section-title">🏅 ROZETLERİM</h2>
+<section class="extra-grid">
+{% for badge in earned_badges %}
+    <div class="extra">
+        <div style="font-size:38px;margin-bottom:12px;">{{ badge.icon }}</div>
+        <h3>{{ badge.name }}</h3>
+        <p>{{ badge.description }}</p>
+        <b style="color:#ff3030;">✓ KAZANILDI</b>
+    </div>
+{% else %}
+    <div class="extra">
+        <h3>🔒 İlk rozetini bekliyoruz</h3>
+        <p>XP kazan, eğitimleri tamamla ve rozetlerini burada sergile.</p>
+    </div>
+{% endfor %}
+</section>
+
 <h2 class="section-title">📚 EĞİTİMLERİN</h2>
 <section class="courses">
 <a href="/html-baslangic" class="course">

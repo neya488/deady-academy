@@ -24,6 +24,16 @@ app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 * 1024
 DB_NAME = "academy.db"
 
 
+def award_eligible_badges(db, user_id):
+    db.execute("""
+        INSERT OR IGNORE INTO user_badges (user_id, badge_id)
+        SELECT ?, id FROM badges
+        WHERE xp_required <= (
+            SELECT xp FROM deady_users WHERE id = ?
+        )
+    """, (user_id, user_id))
+
+
 def get_db():
     db = sqlite3.connect(DB_NAME)
     db.row_factory = sqlite3.Row
@@ -87,7 +97,8 @@ def init_db():
         "xp": "INTEGER NOT NULL DEFAULT 0",
         "level": "INTEGER NOT NULL DEFAULT 1",
         "last_daily_reward": "TEXT",
-        "profile_photo": "TEXT"
+        "profile_photo": "TEXT",
+        "pending_membership": "TEXT"
     }
 
     for column, definition in migrations.items():
@@ -108,6 +119,29 @@ def init_db():
             score INTEGER NOT NULL,
             correct_answers INTEGER NOT NULL,
             completed_at TEXT NOT NULL
+        )
+    """)
+
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS badges (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
+            icon TEXT NOT NULL,
+            xp_required INTEGER NOT NULL DEFAULT 0
+        )
+    """)
+
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS user_badges (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            badge_id INTEGER NOT NULL,
+            earned_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id, badge_id),
+            FOREIGN KEY(user_id) REFERENCES deady_users(id),
+            FOREIGN KEY(badge_id) REFERENCES badges(id)
         )
     """)
 
@@ -249,6 +283,7 @@ def python_final():
                     VALUES (?, 50, ?)
                 """, (user_id, "Python final sınavı ödülü"))
 
+                award_eligible_badges(db, user_id)
                 db.commit()
                 rewarded = True
                 completed = {"score": score, "correct_answers": correct}
@@ -403,6 +438,12 @@ def register():
         username = request.form.get("username", "").strip()
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
+        selected = request.form.get("membership", "BAŞLANGIÇ").strip().upper()
+
+        allowed_packages = {"BAŞLANGIÇ", "GÜMÜŞ", "ALTIN", "ELMAS", "EFSANE"}
+        if selected not in allowed_packages:
+            flash("Geçersiz üyelik paketi.")
+            return redirect("/register")
 
         if not re.fullmatch(r"[A-Za-z0-9_]{3,20}", username):
             flash("Kullanıcı adı 3-20 karakter olmalı.")
@@ -419,8 +460,13 @@ def register():
         db = get_db()
         try:
             db.execute(
-                "INSERT INTO deady_users (username, email, password_hash) VALUES (?, ?, ?)",
-                (username, email, generate_password_hash(password))
+                "INSERT INTO deady_users (username, email, password_hash, pending_membership) VALUES (?, ?, ?, ?)",
+                (
+                    username,
+                    email,
+                    generate_password_hash(password),
+                    None if selected == "BAŞLANGIÇ" else selected
+                )
             )
             db.commit()
 
@@ -428,6 +474,9 @@ def register():
                 "SELECT id, username FROM deady_users WHERE username = ?",
                 (username,)
             ).fetchone()
+
+            award_eligible_badges(db, user["id"])
+            db.commit()
 
             session.clear()
             session["user_id"] = user["id"]
@@ -441,7 +490,12 @@ def register():
         finally:
             db.close()
 
-    return render_template("register.html")
+    selected = request.args.get("paket", "BAŞLANGIÇ").strip().upper()
+    allowed = {"BAŞLANGIÇ", "GÜMÜŞ", "ALTIN", "ELMAS", "EFSANE"}
+    if selected not in allowed:
+        selected = "BAŞLANGIÇ"
+
+    return render_template("register.html", selected_package=selected)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -481,6 +535,28 @@ def dashboard():
             "FROM deady_users WHERE id = ?",
             (session["user_id"],)
         ).fetchone()
+
+        if user is not None:
+            db.execute("""
+                INSERT OR IGNORE INTO user_badges (user_id, badge_id)
+                SELECT ?, id FROM badges
+                WHERE xp_required <= (
+                    SELECT xp FROM deady_users WHERE id = ?
+                )
+            """, (session["user_id"], session["user_id"]))
+
+            earned_badges = db.execute("""
+                SELECT b.name, b.description, b.icon
+                FROM user_badges ub
+                JOIN badges b ON b.id = ub.badge_id
+                WHERE ub.user_id = ?
+                ORDER BY ub.earned_at DESC
+            """, (session["user_id"],)).fetchall()
+
+            db.commit()
+        else:
+            earned_badges = []
+
     finally:
         db.close()
 
@@ -493,6 +569,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         username=user["username"],
+        earned_badges=earned_badges,
         profile_photo=user["profile_photo"],
         membership=user["membership"],
         coins=user["coins"],
@@ -547,6 +624,7 @@ def daily_reward():
             (session["user_id"], "Günlük giriş ödülü")
         )
 
+        award_eligible_badges(db, session["user_id"])
         db.commit()
         flash("Tebrikler! 10 DEADY COINS ve 25 XP kazandın.")
 

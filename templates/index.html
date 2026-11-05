@@ -1,207 +1,228 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY SALVO | Üyelik</title>
-
+<title>DEADY SALVO | Premium Membership</title>
 <style>
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    background: #08060d;
-    color: white;
-    font-family: Arial, sans-serif;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#d6a64c;--bright:#ffe0a0;--red:#ed293f}
+body{
+ background:radial-gradient(ellipse at 50% 0%,#44220d 0%,#160d0a 35%,#050506 75%);
+ color:#fff;font-family:Arial,sans-serif;min-height:100vh;overflow-x:hidden
 }
-
-header {
-    padding: 22px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #30203e;
-    flex-wrap: wrap;
-    gap: 15px;
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;
+ background-image:linear-gradient(45deg,transparent 48%,#d6a64c 49%,transparent 50%);
+ background-size:75px 75px
 }
-
-header h2 {
-    letter-spacing: 2px;
-    margin: 0;
+header{
+ position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;
+ padding:20px 6%;border-bottom:1px solid #9c702d66;
+ background:#080706d9;backdrop-filter:blur(15px);gap:18px;flex-wrap:wrap
 }
-
-header span { color: #c084fc; }
-
-.nav-buttons {
-    display: flex;
-    gap: 12px;
+.logo{font-size:25px;font-weight:1000;letter-spacing:3px;color:#fff}
+.logo span{color:var(--gold);text-shadow:0 0 18px #d6a64c}
+nav{display:flex;gap:12px;flex-wrap:wrap}
+nav a{
+ text-decoration:none;padding:12px 19px;border-radius:5px;font-size:12px;
+ font-weight:bold;letter-spacing:1px;transition:.3s
 }
-
-.nav-buttons a {
-    padding: 12px 20px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-decoration: none;
-    transition: .3s;
+.login{color:var(--bright);border:1px solid var(--gold)}
+.register{color:#160e05;background:linear-gradient(120deg,#ffe3a2,#c38a2c)}
+nav a:hover{transform:translateY(-3px);box-shadow:0 0 20px #d6a64c77}
+main{position:relative;z-index:1;max-width:1300px;margin:auto;padding:65px 22px}
+.hero{text-align:center;margin-bottom:55px}
+.crown{font-size:45px;filter:drop-shadow(0 0 15px #e8b34c)}
+.eyebrow{color:var(--gold);letter-spacing:5px;font-size:11px;font-weight:bold;margin:15px 0}
+h1{
+ font-size:clamp(42px,8vw,83px);font-weight:1000;letter-spacing:5px;
+ background:linear-gradient(100deg,#fff1c9,#c68b31,#fff0bb,#9b641c);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 0 22px #d6a64c55)
 }
-
-.login-btn {
-    color: #c084fc;
-    border: 1px solid #a855f7;
+.subtitle{color:#d1c4ad;font-size:15px;line-height:1.8;margin:18px auto}
+.motto{display:inline-block;border-top:1px solid #b98b43;border-bottom:1px solid #b98b43;
+ padding:13px 28px;color:#f5ca75;letter-spacing:3px;font-size:12px}
+.section-title{text-align:center;color:#f4d18b;font-size:23px;letter-spacing:4px;margin-bottom:30px}
+.packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:17px}
+.package{
+ --accent:#d4d4d4;--glow:#aaa;position:relative;overflow:hidden;
+ padding:27px 19px 22px;border-radius:12px;text-align:center;
+ border:1px solid color-mix(in srgb,var(--accent),transparent 25%);
+ background:linear-gradient(155deg,#26211c,#100e0d 65%,#080808);
+ box-shadow:inset 0 0 25px #ffffff08,0 12px 30px #0009;
+ transition:.35s
 }
-
-.login-btn:hover {
-    background: #9333ea;
-    color: white;
-    box-shadow: 0 0 18px #9333ea;
+.package:before{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--glow),transparent 78%),transparent 65%)
 }
-
-.register-btn {
-    color: white;
-    background: linear-gradient(135deg, #9333ea, #c026d3);
-    box-shadow: 0 0 12px #9333ea66;
+.package:hover{transform:translateY(-9px);box-shadow:0 0 30px color-mix(in srgb,var(--glow),transparent 55%)}
+.package h2{position:relative;color:var(--accent);font-size:23px;letter-spacing:2px;margin:16px 0}
+.level{position:relative;color:#a99d89;font-size:10px;letter-spacing:3px}
+.emblem{position:relative;font-size:39px;margin-top:8px;filter:drop-shadow(0 0 12px var(--glow))}
+.tag{position:relative;display:inline-block;padding:6px 12px;border:1px solid var(--accent);
+ color:var(--accent);font-size:9px;font-weight:bold;letter-spacing:2px;border-radius:20px}
+.price{position:relative;color:#fff0c8;font-size:27px;font-weight:900;margin:19px 0}
+.price small{font-size:11px;color:#b8a88f}
+.description{position:relative;min-height:48px;color:#c1b7a8;font-size:12px;line-height:1.7}
+.features{position:relative;text-align:left;margin:19px 0 23px;min-height:91px}
+.features div{font-size:11px;color:#e4d9c7;margin:12px 0}
+.features span{color:var(--accent);margin-right:7px}
+.choose{
+ position:relative;display:block;padding:13px 8px;text-decoration:none;
+ color:#fff0ce;border:1px solid var(--accent);border-radius:5px;
+ font-size:11px;font-weight:bold;letter-spacing:2px;transition:.3s
 }
-
-.register-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px #c026d3;
+.choose:hover{background:var(--accent);color:#100b05;box-shadow:0 0 22px var(--glow)}
+.starter{--accent:#d7d7d7;--glow:#aaa}
+.silver{--accent:#c2a7ff;--glow:#9254ff}
+.gold{--accent:#ffc34d;--glow:#ffae24}
+.diamond{--accent:#57dcff;--glow:#00bce9}
+.legend{
+ --accent:#ff5361;--glow:#ff1835;
+ background:linear-gradient(155deg,#351016,#160b0d 65%,#080808);
+ border:1px solid #ff5361;box-shadow:0 0 25px #ed293f22
 }
-
-main {
-    max-width: 1100px;
-    margin: auto;
-    padding: 65px 20px;
-    text-align: center;
+.legend:after{
+ content:"EN POPÜLER";position:absolute;top:17px;right:-31px;
+ transform:rotate(42deg);background:var(--red);color:white;
+ padding:7px 35px;font-size:9px;font-weight:bold
 }
-
-h1 {
-    font-size: clamp(42px, 9vw, 75px);
-    letter-spacing: 5px;
-    color: #c084fc;
-    text-shadow: 0 0 25px #9333ea;
+.benefits{
+ display:flex;justify-content:center;gap:35px;flex-wrap:wrap;
+ margin:40px 0;padding:22px 10px;border-top:1px solid #a77b3b66;
+ border-bottom:1px solid #a77b3b66;color:#e9c47e;font-size:12px
 }
-
-.subtitle {
-    color: #b8afc5;
-    margin-bottom: 45px;
-}
-
-.packages {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 18px;
-}
-
-.package {
-    background: #15101e;
-    border: 1px solid #67349a;
-    border-radius: 15px;
-    padding: 25px 15px;
-    transition: .2s;
-}
-
-.package:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 0 22px #7024a8;
-}
-
-.package h2 { color: #c084fc; }
-
-.price {
-    font-size: 27px;
-    font-weight: bold;
-}
-
-.package p {
-    color: #c5bbd0;
-    min-height: 45px;
-}
-
-.button {
-    display: inline-block;
-    background: #9333ea;
-    color: white;
-    padding: 12px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-footer {
-    text-align: center;
-    color: #82778e;
-    padding: 25px;
-}
-
-@media (max-width: 480px) {
-    .nav-buttons a {
-        padding: 10px 12px;
-        font-size: 11px;
-    }
+.benefits span{white-space:nowrap}
+.bottom{text-align:center;padding:40px 10px}
+.bottom h2{font-size:clamp(19px,4vw,31px);letter-spacing:3px}
+.bottom strong{display:block;color:var(--red);margin-top:10px;letter-spacing:3px}
+.bottom p{color:#92816b;font-size:10px;letter-spacing:3px;margin-top:20px}
+footer{text-align:center;padding:23px;color:#927b59;border-top:1px solid #a77b3b44;font-size:10px;letter-spacing:2px}
+@media(max-width:600px){
+ header{justify-content:center;text-align:center;padding:18px}
+ .logo{width:100%}nav{justify-content:center}
+ main{padding:45px 15px}
+ .packages{grid-template-columns:1fr;max-width:390px;margin:auto}
+ .package{padding:25px}
+ .benefits{gap:17px}
+ .motto{letter-spacing:1px;font-size:10px;padding:12px}
 }
 </style>
 </head>
-
 <body>
-
 <header>
-    <h2>DEADY <span>SALVO</span></h2>
-
-    <nav class="nav-buttons">
-        <a class="login-btn" href="/login">GİRİŞ YAP</a>
-        <a class="register-btn" href="/register">KAYIT OL</a>
-    </nav>
+ <div class="logo">♛ DEADY <span>SALVO</span></div>
+ <nav>
+  <a class="login" href="/login">↪ GİRİŞ YAP</a>
+  <a class="register" href="/register">♛ KAYIT OL</a>
+ </nav>
 </header>
 
 <main>
-    <h1>DEADY SALVO</h1>
-    <p class="subtitle">Üyeliğini seç. Ayrıcalıklarını keşfet.</p>
+ <section class="hero">
+  <div class="crown">♛</div>
+  <div class="eyebrow">THE PREMIUM EXPERIENCE</div>
+  <h1>DEADY SALVO</h1>
+  <p class="subtitle">Sıradan olma. Seviyeni belirle. Kendi efsaneni yaz.</p>
+  <div class="motto">YOUR JOURNEY. YOUR RULES. YOUR POWER.</div>
+ </section>
 
-    <section class="packages">
+ <h2 class="section-title">♛ ÜYELİK SEVİYENİ SEÇ ♛</h2>
 
-        <div class="package">
-            <h2>BAŞLANGIÇ</h2>
-            <div class="price">ÜCRETSİZ</div>
-            <p>Standart üyelik ve profil erişimi</p>
-            <a class="button" href="/register">SEÇ</a>
-        </div>
+ <section class="packages">
+  <article class="package starter">
+   <div class="level">LEVEL 01</div>
+   <div class="emblem">✦</div>
+   <h2>BAŞLANGIÇ</h2>
+   <div class="tag">STARTER ACCESS</div>
+   <div class="price">ÜCRETSİZ</div>
+   <p class="description">DEADY dünyasına ilk adımını at.</p>
+   <div class="features">
+    <div><span>✓</span> Standart üyelik</div>
+    <div><span>✓</span> Profil erişimi</div>
+    <div><span>✓</span> Temel eğitimler</div>
+   </div>
+   <a class="choose" href="/register">PAKETİ SEÇ →</a>
+  </article>
 
-        <div class="package">
-            <h2>GÜMÜŞ</h2>
-            <div class="price">99 TL / AY</div>
-            <p>Gümüş üyelik ayrıcalıkları</p>
-            <a class="button" href="/register">SEÇ</a>
-        </div>
+  <article class="package silver">
+   <div class="level">LEVEL 02</div>
+   <div class="emblem">✧</div>
+   <h2>GÜMÜŞ</h2>
+   <div class="tag">SILVER ACCESS</div>
+   <div class="price">99 TL <small>/ AY</small></div>
+   <p class="description">Bir adım öne geç ve gelişimini hızlandır.</p>
+   <div class="features">
+    <div><span>✓</span> Gümüş üyelik görünümü</div>
+    <div><span>✓</span> Ek eğitim içerikleri</div>
+    <div><span>✓</span> Özel profil rozeti</div>
+   </div>
+   <a class="choose" href="/register?paket=GÜMÜŞ">PAKETİ SEÇ →</a>
+  </article>
 
-        <div class="package">
-            <h2>ALTIN</h2>
-            <div class="price">199 TL / AY</div>
-            <p>Altın üyelik ve özel içerikler</p>
-            <a class="button" href="/register">SEÇ</a>
-        </div>
+  <article class="package gold">
+   <div class="level">LEVEL 03</div>
+   <div class="emblem">♛</div>
+   <h2>ALTIN</h2>
+   <div class="tag">GOLD ACCESS</div>
+   <div class="price">199 TL <small>/ AY</small></div>
+   <p class="description">Gücünü göster. Hedeflerini büyüt.</p>
+   <div class="features">
+    <div><span>✓</span> Altın üyelik görünümü</div>
+    <div><span>✓</span> Özel içerikler</div>
+    <div><span>✓</span> Altın profil rozeti</div>
+   </div>
+   <a class="choose" href="/register?paket=ALTIN">PAKETİ SEÇ →</a>
+  </article>
 
-        <div class="package">
-            <h2>ELMAS</h2>
-            <div class="price">349 TL / AY</div>
-            <p>VIP alan ve elmas ayrıcalıkları</p>
-            <a class="button" href="/register">SEÇ</a>
-        </div>
+  <article class="package diamond">
+   <div class="level">LEVEL 04</div>
+   <div class="emblem">💎</div>
+   <h2>ELMAS</h2>
+   <div class="tag">DIAMOND ACCESS</div>
+   <div class="price">349 TL <small>/ AY</small></div>
+   <p class="description">Standartların ötesine geç.</p>
+   <div class="features">
+    <div><span>✓</span> VIP alan tasarımı</div>
+    <div><span>✓</span> Elmas üyelik rozeti</div>
+    <div><span>✓</span> Özel ayrıcalıklar</div>
+   </div>
+   <a class="choose" href="/register?paket=ELMAS">PAKETİ SEÇ →</a>
+  </article>
 
-        <div class="package">
-            <h2>EFSANE</h2>
-            <div class="price">599 TL / AY</div>
-            <p>Tüm premium ayrıcalıklar</p>
-            <a class="button" href="/register">SEÇ</a>
-        </div>
+  <article class="package legend">
+   <div class="level">LEVEL 05</div>
+   <div class="emblem">👑</div>
+   <h2>EFSANE</h2>
+   <div class="tag">LEGEND ACCESS</div>
+   <div class="price">599 TL <small>/ AY</small></div>
+   <p class="description">En üst seviyeye ulaş. Efsaneni oluştur.</p>
+   <div class="features">
+    <div><span>✓</span> Tüm premium ayrıcalıklar</div>
+    <div><span>✓</span> Özel EFSANE rozeti</div>
+    <div><span>✓</span> En üst üyelik görünümü</div>
+   </div>
+   <a class="choose" href="/register?paket=EFSANE">PAKETİ SEÇ →</a>
+  </article>
+ </section>
 
-    </section>
+ <section class="benefits">
+  <span>⚡ Hızlı Erişim</span>
+  <span>♢ Güvenli Hesap</span>
+  <span>💎 Premium İçerik</span>
+  <span>♛ Özel Ayrıcalıklar</span>
+ </section>
+
+ <section class="bottom">
+  <h2>YOU ARE NOT HERE TO FOLLOW.</h2>
+  <strong>YOU ARE HERE TO LEVEL UP.</strong>
+  <p>DEADY SALVO • BUILD YOUR OWN LEGEND</p>
+ </section>
 </main>
 
-<footer>© 2026 DEADY SALVO</footer>
-
+<footer>© 2026 DEADY SALVO — ALL RIGHTS RESERVED</footer>
 </body>
 </html>
-
