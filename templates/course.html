@@ -3,48 +3,218 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY ACADEMY - Ders</title>
+<title>{{ course.title }} | DEADY ACADEMY</title>
 <link rel="stylesheet" href="/static/style.css">
 <style>
-.lesson {
-background:#171722;
-border:1px solid #9333ea;
-border-radius:12px;
-padding:20px;
-margin:15px auto;
-max-width:650px;
-text-align:left;
+body {
+    background: #090810;
+    color: #f4efff;
+    font-family: Arial, sans-serif;
 }
-.lesson a { color:white; text-decoration:none; }
-.lesson a:hover { color:#c084fc; }
+main {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 20px;
+}
+.hero {
+    background: linear-gradient(135deg,#24103b,#10101d);
+    border: 1px solid #9333ea;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 25px;
+}
+.hero h1 { color: #d8b4fe; }
+.lesson {
+    background: #151321;
+    border: 1px solid #39234f;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 25px 0;
+}
+.lesson h2 { color: #c084fc; }
+.level {
+    color: #e9d5ff;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+.content {
+    line-height: 1.9;
+    white-space: pre-line;
+    color: #ddd6e8;
+}
 pre {
-background:#08080d;
-padding:15px;
-overflow-x:auto;
-border-radius:8px;
-color:#c084fc;
+    background: #08070d;
+    border: 1px solid #49305d;
+    border-radius: 12px;
+    padding: 18px;
+    overflow-x: auto;
+    color: #c4b5fd;
+    line-height: 1.7;
+}
+.explanation, .exercise, .quiz {
+    background: #20182d;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 18px;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+.exercise { border-left: 4px solid #a855f7; }
+.quiz { border-left: 4px solid #22c55e; }
+.question { margin: 15px 0; }
+.question label {
+    display: block;
+    padding: 9px;
+    margin: 7px 0;
+    background: #100e19;
+    border-radius: 8px;
+}
+button {
+    background: #9333ea;
+    color: white;
+    border: 0;
+    padding: 12px 20px;
+    border-radius: 9px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+.result { font-weight: bold; margin-top: 12px; }
+.back {
+    display: inline-block;
+    color: #d8b4fe;
+    margin: 20px 0;
 }
 </style>
 </head>
 <body>
+
 <header>
-<h2>DEADY <span>ACADEMY</span></h2>
-<a href="/dashboard">Öğrenci Paneli</a>
+    <h2>DEADY <span>ACADEMY</span></h2>
+    <a href="/dashboard">Öğrenci Paneli</a>
 </header>
+
 <main>
-<h1>{{ course.title }}</h1>
-<p>{{ course.description }}</p>
-<h2>DERS PROGRAMI</h2>
+
+<section class="hero">
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+    <p>📚 Kapsamlı eğitim programı</p>
+    <p>Her konuyu okuyarak, örnekleri inceleyerek ve görevleri yaparak ilerle.</p>
+</section>
+
+<h2>📖 DERS PROGRAMI</h2>
 
 {% for lesson in course.lessons %}
-<div class="lesson">
-<h3>{{ loop.index }}. {{ lesson[0] }}</h3>
-<p>{{ lesson[1] }}</p>
-<pre>{{ lesson[2] }}</pre>
-</div>
+<section class="lesson">
+
+    <div class="level">
+        {{ lesson.level }} SEVİYE
+    </div>
+
+    <h2>{{ lesson.title }}</h2>
+
+    <h3>📘 Konu Anlatımı</h3>
+    <div class="content">{{ lesson.content }}</div>
+
+    <h3>💻 Kod Örneği</h3>
+    <pre>{{ lesson.code }}</pre>
+
+    <div class="explanation">
+        <h3>🔍 Kodun Açıklaması</h3>
+        {{ lesson.explanation }}
+    </div>
+
+    <div class="exercise">
+        <h3>📝 Uygulama Görevi</h3>
+        {{ lesson.exercise }}
+    <div class="quiz">
+    <h3>🧠 Mini Sınav</h3>
+
+    <form class="quiz-form">
+        {% for question in lesson.quiz %}
+        {% set qindex = loop.index0 %}
+
+        <div class="question">
+            <strong>{{ loop.index }}. {{ question.question }}</strong>
+
+            {% for option in question.options %}
+            <label>
+                <input type="radio"
+                       name="q{{ qindex }}"
+                       value="{{ loop.index0 }}">
+                {{ option }}
+            </label>
+            {% endfor %}
+
+            <p class="answer-result"></p>
+        </div>
+        {% endfor %}
+
+        <button type="button" class="check-quiz">
+            Cevapları Kontrol Et
+        </button>
+
+        <h4 class="quiz-score"></h4>
+    </<script>
+document.querySelectorAll(".quiz-form").forEach(form => {
+    form.querySelector(".check-quiz").addEventListener("click", () => {
+        const questions = form.querySelectorAll(".question");
+        let correct = 0;
+        let wrong = 0;
+
+        questions.forEach((question, index) => {
+            const selected = question.querySelector("input:checked");
+            const result = question.querySelector(".answer-result");
+            const correctAnswer = Number(
+                question.dataset.answer
+            );
+
+            if (!selected) {
+                result.textContent = "⚠️ Cevap seçmedin.";
+                result.style.color = "orange";
+                wrong++;
+            } else if (Number(selected.value) === correctAnswer) {
+                result.textContent = "✅ Doğru cevap!";
+                result.style.color = "#36e36b";
+                correct++;
+            } else {
+                result.textContent = "❌ Yanlış cevap!";
+                result.style.color = "#ff4444";
+                wrong++;
+            }
+        });
+
+        form.querySelector(".quiz-score").textContent =
+            `Sonuç: ${correct} doğru, ${wrong} yanlış.`;
+    });
+});
+</script>form>
+</div>    <h3>🧠 Mini Sınav</h3>
+
+        {% for question in lesson.quiz %}
+        <div class="question">
+            <strong>{{ loop.index }}. {{ question.question }}</strong>
+
+            {% for option in question.options %}
+            <label>
+                <input type="radio"
+                       name="q{{ loop.index }}_{{ loop.index0 }}"
+                       value="{{ loop.index0 }}">
+                {{ option }}
+            </label>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <p>Mini sınav sorularını cevaplarını kontrol etmek için kullanabilirsin.</p>
+    </div>
+
+</section>
 {% endfor %}
 
-<a class="button" href="/dashboard">EĞİTİMLERE DÖN</a>
+<a class="back" href="/dashboard">← Öğrenci Paneline Dön</a>
+
 </main>
+
 </body>
 </html>

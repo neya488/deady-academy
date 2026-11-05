@@ -1,141 +1,453 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY SALVO | Giriş</title>
+<meta name="theme-color" content="#080609">
+<title>DEADY ∅ | Beyond The System</title>
+
 <style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: radial-gradient(ellipse at top, #32104c, #09060f 65%);
-    color: white;
-    font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+
+:root{
+ --red:#ff263f;
+ --purple:#a855f7;
+ --bg:#080609;
+ --muted:#938b9a;
 }
-.card {
-    width: 100%;
-    max-width: 420px;
-    padding: 38px 28px;
-    background: rgba(24, 15, 36, .92);
-    border: 1px solid #7136a0;
-    border-radius: 22px;
-    box-shadow: 0 0 45px #8b27c544;
-    text-align: center;
+
+body{
+ margin:0;
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:25px;
+ overflow-x:hidden;
+ background:
+ radial-gradient(ellipse at 50% 45%,#35101d 0%,transparent 45%),
+ radial-gradient(circle at 10% 10%,#24102e,transparent 35%),
+ #080609;
+ color:white;
+ font-family:Arial,sans-serif;
 }
-.logo {
-    font-size: 30px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    color: white;
-    text-shadow: 0 0 18px #a855f7;
+
+body:before{
+ content:"";
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ opacity:.13;
+ background-image:
+ linear-gradient(#ffffff08 1px,transparent 1px),
+ linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+ background-size:45px 45px;
 }
-.logo span { color: #c084fc; }
-.subtitle { color: #a99ab8; font-size: 13px; margin: 12px 0 30px; }
-h2 { letter-spacing: 2px; margin-bottom: 25px; }
-.field { text-align: left; margin-bottom: 18px; }
-label {
-    display: block;
-    color: #c084fc;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 9px;
-    letter-spacing: 1px;
+
+.orb{
+ position:fixed;
+ width:340px;
+ height:340px;
+ border:1px solid #ff263f30;
+ border-radius:50%;
+ box-shadow:0 0 80px #ff263f12,inset 0 0 70px #ff263f12;
+ animation:rotate 25s linear infinite;
+ pointer-events:none;
 }
-input {
-    width: 100%;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #49305e;
-    background: #0e0a15;
-    color: white;
-    outline: none;
-    font-size: 15px;
+
+.orb:before,.orb:after{
+ content:"";
+ position:absolute;
+ inset:25px;
+ border:1px dashed #a34aff35;
+ border-radius:50%;
 }
-input:focus {
-    border-color: #bd65ff;
-    box-shadow: 0 0 12px #9333ea66;
+
+.orb:after{
+ inset:55px;
+ border-color:#ff263f35;
 }
-.password-wrap { display: flex; gap: 7px; }
-.password-wrap input { min-width: 0; }
-.show {
-    background: #30203e;
-    color: #d8b4fe;
-    border: 1px solid #70449a;
-    border-radius: 9px;
-    padding: 0 12px;
+
+@keyframes rotate{
+ to{transform:rotate(360deg)}
 }
-.submit {
-    width: 100%;
-    padding: 16px;
-    border: 0;
-    border-radius: 10px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    background: linear-gradient(110deg, #7e22ce, #c026d3);
-    box-shadow: 0 0 20px #9333ea66;
-    cursor: pointer;
-    margin-top: 8px;
+
+.layout{
+ width:100%;
+ max-width:1050px;
+ display:grid;
+ grid-template-columns:1fr 420px;
+ gap:55px;
+ align-items:center;
+ position:relative;
+ z-index:1;
 }
-.submit:hover { box-shadow: 0 0 30px #c026d3; }
-.message { color: #f0abfc; font-size: 13px; margin: 10px 0; }
-.bottom { color: #a99ab8; font-size: 14px; margin-top: 25px; }
-a { color: #d8b4fe; text-decoration: none; font-weight: bold; }
-a:hover { color: white; }
-.back { display: block; margin-top: 20px; color: #8e7a9e; font-size: 12px; }
+
+.brand{padding:25px}
+
+.symbol{
+ width:75px;
+ height:75px;
+ display:grid;
+ place-items:center;
+ border:1px solid var(--red);
+ color:var(--red);
+ font-size:42px;
+ font-weight:900;
+ transform:rotate(45deg);
+ box-shadow:0 0 35px #ff263f35;
+ margin:0 0 35px 12px;
+}
+
+.symbol span{transform:rotate(-45deg)}
+
+.brand h1{
+ font-size:clamp(42px,7vw,76px);
+ line-height:.95;
+ letter-spacing:-3px;
+ margin:0;
+ font-weight:950;
+}
+
+.brand h1 span{
+ color:var(--red);
+ text-shadow:0 0 35px #ff263f70;
+}
+
+.tagline{
+ color:#c5bacb;
+ letter-spacing:5px;
+ font-size:12px;
+ margin-top:22px;
+}
+
+.description{
+ color:var(--muted);
+ line-height:1.8;
+ max-width:390px;
+ font-size:14px;
+ margin-top:35px;
+}
+
+.status{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-top:35px;
+ color:#aaa0b1;
+ font-size:11px;
+ letter-spacing:2px;
+}
+
+.dot{
+ width:8px;
+ height:8px;
+ border-radius:50%;
+ background:var(--red);
+ box-shadow:0 0 13px var(--red);
+ animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+ 50%{opacity:.3;box-shadow:0 0 3px var(--red)}
+}
+
+.card{
+ width:100%;
+ padding:35px 29px;
+ background:linear-gradient(145deg,#1b111bdc,#100c14ed);
+ border:1px solid #71304080;
+ border-radius:22px;
+ box-shadow:0 25px 90px #000b,0 0 45px #ff263f12;
+ backdrop-filter:blur(18px);
+ animation:appear .8s ease both;
+}
+
+@keyframes appear{
+ from{opacity:0;transform:translateY(25px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.card-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:30px;
+}
+
+.card-top span{
+ font-size:10px;
+ color:#ff6475;
+ letter-spacing:2px;
+}
+
+.card-top .access{color:#817786}
+
+.card h2{
+ font-size:25px;
+ letter-spacing:1px;
+ margin:0 0 8px;
+}
+
+.sub{
+ color:#928696;
+ font-size:13px;
+ margin:0 0 28px;
+}
+
+.message{
+ padding:12px;
+ background:#391622;
+ border:1px solid #a72d46;
+ border-radius:9px;
+ color:#ffb2bd;
+ font-size:13px;
+ margin:12px 0;
+}
+
+.field{
+ margin-bottom:20px;
+ text-align:left;
+}
+
+label{
+ display:block;
+ color:#c9b9c9;
+ font-size:11px;
+ font-weight:bold;
+ letter-spacing:2px;
+ margin-bottom:10px;
+}
+
+input{
+ width:100%;
+ padding:16px;
+ border:1px solid #40303e;
+ border-radius:10px;
+ background:#0c0910;
+ color:white;
+ outline:none;
+ font-size:15px;
+ transition:.25s;
+}
+
+input:focus{
+ border-color:var(--red);
+ box-shadow:0 0 18px #ff263f25;
+}
+
+input::placeholder{color:#655b69}
+
+.password-wrap{
+ display:flex;
+ gap:8px;
+}
+
+.password-wrap input{min-width:0}
+
+.show{
+ border:1px solid #58303e;
+ border-radius:9px;
+ background:#21131c;
+ color:#ff8795;
+ padding:0 12px;
+ cursor:pointer;
+ font-size:11px;
+}
+
+.submit{
+ width:100%;
+ margin-top:9px;
+ padding:17px;
+ border:0;
+ border-radius:10px;
+ color:white;
+ background:linear-gradient(100deg,#b51630,#f02b49);
+ font-weight:900;
+ font-size:13px;
+ letter-spacing:3px;
+ cursor:pointer;
+ box-shadow:0 8px 30px #ff263f30;
+ transition:.25s;
+}
+
+.submit:hover{
+ transform:translateY(-2px);
+ box-shadow:0 10px 35px #ff263f70;
+}
+
+.bottom{
+ text-align:center;
+ color:#938696;
+ font-size:13px;
+ margin-top:25px;
+}
+
+a{
+ color:#ff687b;
+ text-decoration:none;
+ font-weight:bold;
+}
+
+a:hover{color:white}
+
+.back{
+ display:block;
+ text-align:center;
+ margin-top:22px;
+ color:#817786;
+ font-size:11px;
+ letter-spacing:1px;
+}
+
+.footer{
+ position:relative;
+ z-index:1;
+ text-align:center;
+ color:#554b5a;
+ font-size:10px;
+ letter-spacing:2px;
+ margin-top:25px;
+}
+
+@media(max-width:800px){
+ .layout{
+  grid-template-columns:1fr;
+  max-width:430px;
+  gap:25px;
+ }
+ .brand{
+  text-align:center;
+  padding:10px;
+ }
+ .symbol{
+  margin:15px auto 30px;
+ }
+ .brand h1{font-size:49px}
+ .description{display:none}
+ .status{justify-content:center;margin-top:20px}
+ .card{padding:30px 23px}
+}
+
+@media(max-width:380px){
+ .brand h1{font-size:40px}
+ .card{padding:25px 18px}
+}
 </style>
 </head>
+
 <body>
+
+<div class="orb"></div>
+
+<div class="layout">
+
+<section class="brand">
+
+<div class="symbol"><span>∅</span></div>
+
+<h1>DEADY<br><span>ACADEMY</span></h1>
+
+<div class="tagline">BEYOND THE SYSTEM</div>
+
+<p class="description">
+Sınırlarını aş. Bilgini geliştir. Kendi geleceğini kodla.
+DEADY dünyasında yeni bir seviyeye geç.
+</p>
+
+<div class="status">
+<span class="dot"></span>
+SYSTEM ONLINE
+</div>
+
+</section>
+
+<section>
+
 <div class="card">
-    <div class="logo">DEADY <span>SALVO</span></div>
-    <p class="subtitle">TEKRAR HOŞ GELDİN</p>
-    <h2>HESABINA GİRİŞ YAP</h2>
 
-    {% with messages = get_flashed_messages() %}
-    {% for message in messages %}
-    <p class="message">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+<div class="card-top">
+<span>DEADY AUTHENTICATION</span>
+<span class="access">SECURE ACCESS</span>
+</div>
 
-    <form method="POST">
-        <div class="field">
-            <label>KULLANICI ADI</label>
-            <input type="text" name="username"
-                   placeholder="Kullanıcı adın"
-                   autocomplete="username" required>
-        </div>
+<h2>SİSTEME GİRİŞ</h2>
+<p class="sub">Tekrar hoş geldin. Seni bekliyorduk.</p>
 
-        <div class="field">
-            <label>ŞİFRE</label>
-            <div class="password-wrap">
-                <input id="password" type="password" name="password"
-                       placeholder="Şifren"
-                       autocomplete="current-password" required>
-                <button class="show" type="button"
-                        onclick="togglePassword()">GÖSTER</button>
-            </div>
-        </div>
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<p class="message">{{ message }}</p>
+{% endfor %}
+{% endwith %}
 
-        <button class="submit" type="submit">GİRİŞ YAP</button>
-    </form>
+<form method="POST">
 
-    <p class="bottom">Hesabın yok mu? <a href="/register">KAYIT OL</a></p>
-    <a class="back" href="/">← ANA SAYFAYA DÖN</a>
+<div class="field">
+<label>KULLANICI ADI</label>
+<input
+ type="text"
+ name="username"
+ placeholder="Kullanıcı adın"
+ autocomplete="username"
+ required>
+</div>
+
+<div class="field">
+<label>ŞİFRE</label>
+<div class="password-wrap">
+<input
+ id="password"
+ type="password"
+ name="password"
+ placeholder="Şifren"
+ autocomplete="current-password"
+ required>
+
+<button
+ class="show"
+ type="button"
+ onclick="togglePassword()">
+GÖSTER
+</button>
+</div>
+</div>
+
+<button class="submit" type="submit">
+SİSTEME GİR →
+</button>
+
+</form>
+<div style="text-align:center;margin:18px 0;"><a href="/forgot-password">ŞİFREMİ UNUTTUM?</a></div>
+
+<p class="bottom">
+Hesabın yok mu? <a href="/register">HESAP OLUŞTUR</a>
+</p>
+
+<a class="back" href="/">← ANA SAYFAYA DÖN</a>
+
+</div>
+
+<div class="footer">
+DEADY ACADEMY © 2026
+</div>
+
+</section>
 </div>
 
 <script>
-function togglePassword() {
-    const field = document.getElementById("password");
-    field.type = field.type === "password" ? "text" : "password";
+function togglePassword(){
+ const field=document.getElementById("password");
+ const button=document.querySelector(".show");
+
+ if(field.type==="password"){
+  field.type="text";
+  button.textContent="GİZLE";
+ }else{
+  field.type="password";
+  button.textContent="GÖSTER";
+ }
 }
 </script>
+
 </body>
 </html>
-

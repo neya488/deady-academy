@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY | Profilim</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#08070e;color:white;font-family:Arial}
+header{padding:20px;background:#11101b;border-bottom:1px solid #9333ea;display:flex;justify-content:space-between}
+a{color:#d8b4fe;text-decoration:none}
+main{max-width:750px;margin:35px auto;padding:15px}
+.profile{text-align:center;background:linear-gradient(140deg,#32134c,#151321);padding:30px;border:1px solid #9333ea;border-radius:20px}
+.avatar{width:110px;height:110px;border-radius:50%;background:#9333ea;object-fit:cover;display:block;margin:auto;border:3px solid #d8b4fe}
+.initial{display:grid;place-items:center;font-size:38px;font-weight:bold}
+h1{color:#e9d5ff}
+.id{background:#0c0b13;border:1px solid #9333ea;padding:12px;border-radius:10px;display:inline-block;color:#d8b4fe}
+.upload{margin:22px auto 0;padding:18px;background:#151321;border:1px solid #7135a5;border-radius:14px;max-width:400px}
+input{width:100%;margin:12px 0;color:white}
+button{background:#9333ea;color:white;border:0;padding:13px 20px;border-radius:9px;font-weight:bold;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.stat,.history{background:#151321;padding:18px;border:1px solid #38264f;border-radius:13px}
+.stat strong{display:block;color:#d8b4fe;font-size:24px;margin-top:8px}
+.history{margin-top:20px}
+.item{padding:12px 0;border-bottom:1px solid #30263c}
+.plus{color:#4ade80}.minus{color:#fb7185}
+.message{background:#21152e;padding:12px;border:1px solid #9333ea;border-radius:10px;margin:12px 0}
+@media(max-width:450px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<strong>DEADY <span style="color:#c084fc">ACADEMY</span></strong>
+<a href="/dashboard">Panele dön</a>
+</header>
+<main>
+
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="message">{{ message }}</div>
+{% endfor %}
+{% endwith %}
+
+<section class="profile">
+{% if user.profile_photo %}
+<img class="avatar" src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil fotoğrafı">
+{% else %}
+<div class="avatar initial">{{ user.username[0]|upper }}</div>
+{% endif %}
+
+<h1>{{ user.username }}</h1>
+<div class="id">DEADY ID: {{ deady_id }}</div>
+<p>👑 {{ user.membership }} ÜYELİK</p>
+
+<form class="upload" method="POST" action="/upload-profile-photo" enctype="multipart/form-data">
+<h3>📸 PROFİL FOTOĞRAFINI DEĞİŞTİR</h3>
+<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required>
+<button type="submit">FOTOĞRAFI YÜKLE</button>
+<p><small>JPG, PNG veya WebP · Maksimum 3 MB</small></p>
+</form>
+</section>
+
+<section class="stats">
+<div class="stat">🪙 COINS<strong>{{ user.coins }}</strong></div>
+<div class="stat">⭐ LEVEL<strong>{{ user.level }}</strong></div>
+<div class="stat">⚡ XP<strong>{{ user.xp }}</strong></div>
+</section>
+
+<section class="history">
+<h2>🪙 COIN GEÇMİŞİ</h2>
+{% if transactions %}
+{% for item in transactions %}
+<div class="item">
+<strong class="{% if item.amount >= 0 %}plus{% else %}minus{% endif %}">
+{% if item.amount > 0 %}+{% endif %}{{ item.amount }} COINS
+</strong>
+<p>{{ item.reason }}</p>
+<small>{{ item.created_at }}</small>
+</div>
+{% endfor %}
+{% else %}
+<p>Henüz coin işlemin bulunmuyor.</p>
+{% endif %}
+</section>
+
+<p><a href="/dashboard">← Öğrenci paneline dön</a></p>
+</main>
+</body>
+</html>

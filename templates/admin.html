@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEADY ACADEMY | Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0b0f;color:white;font-family:Arial,sans-serif;padding:20px}
+.container{max-width:950px;margin:auto}
+h1{color:#00e5ff}
+.card{background:#17171f;padding:22px;border-radius:14px;margin:20px 0;border:1px solid #292936}
+.count{font-size:38px;font-weight:bold;color:#00e5ff}
+table{width:100%;border-collapse:collapse}
+th,td{padding:13px;text-align:left;border-bottom:1px solid #333}
+th{color:#00e5ff}
+a{color:#00e5ff;text-decoration:none}
+.small{color:#aaa}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>⚡ DEADY ACADEMY</h1>
+<p class="small">Yönetici Kontrol Paneli</p>
+
+<div class="card">
+<p>TOPLAM ÜYE</p>
+<div class="count">{{ total_users }}</div>
+</div>
+
+<div class="card">
+<h2>👥 Üye Listesi</h2>
+<table>
+<tr>
+<th>ID</th>
+<th>Kullanıcı Adı</th>
+<th>Üyelik</th>
+</tr>
+{% for user in users %}
+<tr>
+<td>{{ user.id }}</td>
+<td>{{ user.username }}</td>
+<td>{{ user.membership }}</td>
+</tr>
+{% else %}
+<tr><td colspan="3">Henüz üye bulunmuyor.</td></tr>
+{% endfor %}
+</table>
+</div>
+
+<a href="/dashboard">← Kullanıcı Paneline Dön</a>
+</div>
+</body>
+</html>

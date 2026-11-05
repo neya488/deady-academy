@@ -4,114 +4,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY ACADEMY | Öğrenci Paneli</title>
+<title>DEADY ACADEMY | Premium Panel</title>
 <style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    background: #08080d;
-    color: white;
-    font-family: Arial, sans-serif;
-}
-header {
-    background: #11111b;
-    border-bottom: 1px solid #9333ea;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-header h2 { margin: 0; }
-header span { color: #c084fc; }
-header a { color: white; text-decoration: none; }
-main {
-    max-width: 850px;
-    margin: 35px auto;
-    padding: 20px;
-}
-.welcome {
-    background: linear-gradient(135deg, #24103b, #11111b);
-    border: 1px solid #9333ea;
-    padding: 25px;
-    border-radius: 16px;
-}
-h1 { color: #d8b4fe; }
-.courses {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-.course {
-    display: block;
-    background: #171722;
-    border: 1px solid #7135a5;
-    border-radius: 14px;
-    padding: 22px;
-    color: white;
-    text-decoration: none;
-    transition: 0.2s;
-}
-.course:hover {
-    border-color: #c084fc;
-    transform: translateY(-3px);
-}
-.course h3 { color: #c084fc; }
-.course p { color: #c4c4d0; }
-footer {
-    text-align: center;
-    color: #888;
-    padding: 30px;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#090711;color:#f5f0ff;font-family:Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,#35105c66,transparent 35%),radial-gradient(circle at 90% 80%,#6815a333,transparent 35%);pointer-events:none;z-index:-1}
+header{padding:20px 6%;background:#100d1bd9;border-bottom:1px solid #633a87;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+header h2{margin:0;letter-spacing:2px}
+header span{color:#c084fc}
+nav{display:flex;gap:18px;align-items:center}
+a{color:inherit;text-decoration:none}
+.logout{padding:10px 15px;border:1px solid #9252c5;border-radius:10px}
+main{max-width:1100px;margin:35px auto;padding:0 18px}
+.welcome,.stat,.course,.reward,.progress,.extra{background:#171322;border:1px solid #39294e;border-radius:18px;padding:22px;box-shadow:0 10px 30px #0005}
+.welcome{background:linear-gradient(120deg,#39175b,#191326 75%);border-color:#9252c5;position:relative;overflow:hidden}
+.welcome:after{content:"✦";position:absolute;right:30px;top:10px;font-size:100px;color:#ffffff12}
+h1{color:#e9d5ff;margin-top:0;font-size:29px}
+.welcome p{color:#d3c3e8}
+.membership{display:inline-block;padding:8px 13px;border-radius:30px;background:#682ca0;color:#f3ddff;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:20px 0}
+.stat{transition:.25s}
+.stat:hover,.course:hover{transform:translateY(-4px);border-color:#b66aff}
+.stat small{color:#bba9d0}
+.stat strong{display:block;font-size:28px;margin-top:10px;color:#d8b4fe}
+.progress{margin:20px 0}
+.progress-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bar{height:13px;background:#30253e;border-radius:20px;overflow:hidden;margin:14px 0 8px}
+.fill{height:100%;width:{{ xp_progress }}%;background:linear-gradient(90deg,#9333ea,#d8b4fe);border-radius:20px;transition:width .5s}
+.reward{margin:20px 0;background:linear-gradient(120deg,#28153c,#171322)}
+button{background:linear-gradient(100deg,#9333ea,#6b21a8);color:white;border:0;border-radius:11px;padding:13px 20px;font-weight:bold;font-size:15px;cursor:pointer}
+button:hover{filter:brightness(1.2)}
+button:disabled{background:#484052;color:#c5bdce;cursor:not-allowed}
+.courses{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:15px}
+.course{transition:.25s}
+.course h3{color:#d8b4fe}
+.course p{color:#b9b2c7;line-height:1.5}
+.course b{color:#c084fc}
+.message{background:#20152b;border:1px solid #7135a5;border-radius:10px;padding:12px;margin:15px 0}
+.section-title{margin-top:30px;color:#ead5ff}
+.extra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.extra h3{color:#d8b4fe;margin-top:0}
+.extra p{color:#b9b2c7;line-height:1.5}
+footer{text-align:center;color:#777;padding:35px}
+@media(max-width:600px){header{padding:17px}nav{font-size:13px;gap:12px}h1{font-size:23px}.welcome,.stat,.course,.reward,.progress{padding:18px}}
 </style>
 </head>
 <body>
-
 <header>
-    <h2>DEADY <span>ACADEMY</span></h2>
-    <a href="/logout">Çıkış Yap</a>
+<h2>DEADY <span>ACADEMY</span></h2>
+<nav>
+<a href="/profile">👤 Profilim</a>
+<a class="logout" href="/logout">Çıkış Yap</a>
+</nav>
 </header>
 
 <main>
-    <section class="welcome">
-        <h1>HOŞ GELDİN, {{ username }}! 👋</h1>
-        <p>Bugün yeni bir şey öğrenmeye ne dersin?</p>
-        <p>Bilgi öğren, kod yaz, kendi projeni oluştur!</p>
-    </section>
+<section class="welcome">
+<h1>HOŞ GELDİN, {{ username }}! 👋</h1>
+<p>Bugün de kendini geliştir. Hedeflerine bir adım daha yaklaş.</p>
+<p>Üyelik: <span class="membership">{{ membership }}</span></p>
+</section>
 
-    <h2>📚 EĞİTİMLERİN</h2>
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="message">{{ message }}</div>
+{% endfor %}
+{% endwith %}
 
-    <section class="courses">
-        <a href="/html-baslangic" class="course">
-            <h3>🌐 HTML Başlangıç</h3>
-            <p>Sıfırdan ilk web sayfanı oluştur.</p>
-            <b>İlk derse başla →</b>
-        </a>
+<section class="stats">
+<div class="stat"><small>🪙 DEADY COINS</small><strong>{{ coins }}</strong></div>
+<div class="stat"><small>⭐ SEVİYE</small><strong>{{ level }}</strong></div>
+<div class="stat"><small>⚡ TOPLAM XP</small><strong>{{ xp }}</strong></div>
+<div class="stat"><small>👑 ÜYELİK</small><strong style="font-size:20px">{{ membership }}</strong></div>
+</section>
 
-        <a href="/course/python" class="course">
-            <h3>🐍 Python</h3>
-            <p>Python, değişkenler, döngüler ve Random.</p>
-            <b>Eğitime başla →</b>
-        </a>
+<section class="progress">
+<div class="progress-top">
+<strong>⚡ SEVİYE İLERLEMEN</strong>
+<span>{{ xp_progress }}/100 XP</span>
+</div>
+<div class="bar"><div class="fill"></div></div>
+<small style="color:#bba9d0">Sonraki seviyeye {{ xp_to_next }} XP kaldı.</small>
+</section>
 
-        <a href="/course/web" class="course">
-            <h3>💻 Web Tasarım</h3>
-            <p>HTML, CSS ve JavaScript öğren.</p>
-            <b>Eğitime başla →</b>
-        </a>
+<section class="reward">
+<h2>🎁 Günlük Ödül</h2>
+<p>Her gün giriş yap, 10 coin ve 25 XP kazan.</p>
+<form method="POST" action="/daily-reward">
+<button type="submit" {% if daily_claimed %}disabled{% endif %}>
+{% if daily_claimed %}Bugünkü ödül alındı ✓{% else %}Günlük ödülümü al{% endif %}
+</button>
+</form>
+</section>
 
-        <a href="/course/ai" class="course">
-            <h3>🤖 Yapay Zekâ</h3>
-            <p>Yapay zekânın temel mantığını keşfet.</p>
-            <b>Eğitime başla →</b>
-        </a>
-    </section>
+<h2 class="section-title">📚 EĞİTİMLERİN</h2>
+<section class="courses">
+<a href="/html-baslangic" class="course">
+<h3>🌐 HTML Başlangıç</h3>
+<p>Sıfırdan ilk web sayfanı oluştur.</p>
+<b>İlk derse başla →</b>
+</a>
+<a href="/course/python" class="course">
+<h3>🐍 Python</h3>
+<p>Değişkenler, döngüler ve fonksiyonlar.</p>
+<b>Eğitime başla →</b>
+</a>
+<a href="/python-final" class="course">
+<h3>🏆 Python Final Sınavı</h3>
+<p>30 soruluk sınavda bilgini test et.</p>
+<b>Sınava gir →</b>
+</a>
+<a href="/course/web" class="course">
+<h3>💻 Web Tasarım</h3>
+<p>HTML, CSS ve JavaScript öğren.</p>
+<b>Eğitime başla →</b>
+</a>
+</section>
+
+<h2 class="section-title">✨ DEADY AVANTAJLARI</h2>
+<section class="extra-grid">
+<div class="extra">
+<h3>🏅 Rozet Sistemi</h3>
+<p>Görevleri tamamla, başarılarını göster ve yeni rozetler kazan.</p>
+</div>
+<div class="extra">
+<h3>🎯 Günlük Görevler</h3>
+<p>Her gün yeni hedefler belirle, XP ve coin kazanmaya devam et.</p>
+</div>
+<div class="extra">
+<h3>👑 Premium Dünya</h3>
+<p>Gelişimini takip et ve DEADY topluluğunda yüksel.</p>
+</div>
+</section>
 </main>
 
-<footer>
-    DEADY ACADEMY © 2026
-</footer>
-
+<footer>DEADY ACADEMY © 2026 | CODE YOUR FUTURE.</footer>
 </body>
 </html>
-
