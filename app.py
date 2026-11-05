@@ -60,20 +60,41 @@ def send_reset_email(recipient, reset_url):
 
 def init_db():
     db = get_db()
+
     db.execute("""
         CREATE TABLE IF NOT EXISTS deady_users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL COLLATE NOCASE UNIQUE,
             password_hash TEXT NOT NULL,
-            membership TEXT NOT NULL DEFAULT 'BAŞLANGIÇ'
+            membership TEXT NOT NULL DEFAULT 'BAŞLANGIÇ',
+            coins INTEGER NOT NULL DEFAULT 0,
+            xp INTEGER NOT NULL DEFAULT 0,
+            level INTEGER NOT NULL DEFAULT 1,
+            last_daily_reward TEXT,
+            profile_photo TEXT,
+            email TEXT
         )
     """)
-    columns = [row["name"] for row in db.execute(
-        "PRAGMA table_info(deady_users)"
-    ).fetchall()]
 
-    if "email" not in columns:
-        db.execute("ALTER TABLE deady_users ADD COLUMN email TEXT")
+    columns = {
+        row["name"]
+        for row in db.execute("PRAGMA table_info(deady_users)").fetchall()
+    }
+
+    migrations = {
+        "email": "TEXT",
+        "coins": "INTEGER NOT NULL DEFAULT 0",
+        "xp": "INTEGER NOT NULL DEFAULT 0",
+        "level": "INTEGER NOT NULL DEFAULT 1",
+        "last_daily_reward": "TEXT",
+        "profile_photo": "TEXT"
+    }
+
+    for column, definition in migrations.items():
+        if column not in columns:
+            db.execute(
+                f"ALTER TABLE deady_users ADD COLUMN {column} {definition}"
+            )
 
     db.execute("""
         CREATE UNIQUE INDEX IF NOT EXISTS idx_deady_users_email
