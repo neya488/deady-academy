@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import sqlite3
+from db_layer import get_postgres_db
 import re
 import os
 import secrets
@@ -36,6 +37,9 @@ def award_eligible_badges(db, user_id):
 
 
 def get_db():
+    if os.environ.get("DATABASE_URL"):
+        return get_postgres_db()
+
     db = sqlite3.connect(DB_NAME)
     db.row_factory = sqlite3.Row
     return db
@@ -70,6 +74,25 @@ def send_reset_email(recipient, reset_url):
 
 
 def init_db():
+    if os.environ.get("DATABASE_URL"):
+        db = get_db()
+        try:
+            tables = [
+                "deady_users", "users", "badges",
+                "python_final_completions",
+                "javascript_final_completions",
+                "announcements", "password_reset_tokens",
+                "coin_transactions", "private_messages",
+                "user_badges"
+            ]
+            for table in tables:
+                db.execute(f"SELECT 1 FROM {table} LIMIT 1")
+            db.commit()
+            print("Neon PostgreSQL tabloları doğrulandı.")
+        finally:
+            db.close()
+        return
+
     db = get_db()
 
     db.execute("""
