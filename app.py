@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from PIL import Image, UnidentifiedImageError
 from course_data import PYTHON_COURSE
 from python_final_data import PYTHON_FINAL
+from javascript_final_data import JAVASCRIPT_FINAL
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "local-development-key")
@@ -123,6 +124,15 @@ def init_db():
     """)
 
     db.execute("""
+        CREATE TABLE IF NOT EXISTS javascript_final_completions (
+            user_id INTEGER PRIMARY KEY,
+            score INTEGER NOT NULL,
+            correct_answers INTEGER NOT NULL,
+            completed_at TEXT NOT NULL
+        )
+    """)
+
+    db.execute("""
         CREATE TABLE IF NOT EXISTS badges (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             code TEXT NOT NULL UNIQUE,
@@ -142,6 +152,28 @@ def init_db():
             UNIQUE(user_id, badge_id),
             FOREIGN KEY(user_id) REFERENCES deady_users(id),
             FOREIGN KEY(badge_id) REFERENCES badges(id)
+        )
+    """)
+
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS announcements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS private_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            receiver_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            is_read INTEGER NOT NULL DEFAULT 0,
+            FOREIGN KEY(sender_id) REFERENCES deady_users(id),
+            FOREIGN KEY(receiver_id) REFERENCES deady_users(id)
         )
     """)
 
@@ -316,6 +348,113 @@ def python_final():
     )
 
 
+
+
+
+@app.route("/javascript-final", methods=["GET", "POST"])
+@login_required
+def javascript_final():
+    db = get_db()
+    user_id = session["user_id"]
+
+    completed = db.execute(
+        "SELECT score, correct_answers FROM javascript_final_completions WHERE user_id = ?",
+        (user_id,)
+    ).fetchone()
+
+    result = None
+
+    if request.method == "POST":
+        correct = 0
+        blank = 0
+
+        for i, question in enumerate(JAVASCRIPT_FINAL):
+            answer = request.form.get(f"q{i}")
+
+            if answer is None or answer == "":
+                blank += 1
+                continue
+
+            try:
+                if int(answer) == question["answer"]:
+                    correct += 1
+            except (ValueError, TypeError):
+                pass
+
+        wrong = len(JAVASCRIPT_FINAL) - correct - blank
+        score = round(correct * 100 / len(JAVASCRIPT_FINAL))
+        passed = correct >= 21
+        rewarded = False
+
+        if passed and completed is None:
+            try:
+                db.execute("BEGIN IMMEDIATE")
+
+                db.execute("""
+                    INSERT INTO javascript_final_completions
+                    (user_id, score, correct_answers, completed_at)
+                    VALUES (?, ?, ?, ?)
+                """, (
+                    user_id,
+                    score,
+                    correct,
+                    datetime.now().isoformat(timespec="seconds")
+                ))
+
+                user = db.execute(
+                    "SELECT xp FROM deady_users WHERE id = ?",
+                    (user_id,)
+                ).fetchone()
+
+                if user is None:
+                    raise ValueError("Kullanıcı bulunamadı.")
+
+                new_xp = user["xp"] + 100
+                new_level = (new_xp // 100) + 1
+
+                db.execute("""
+                    UPDATE deady_users
+                    SET coins = coins + 50, xp = ?, level = ?
+                    WHERE id = ?
+                """, (new_xp, new_level, user_id))
+
+                db.execute("""
+                    INSERT INTO coin_transactions (user_id, amount, reason)
+                    VALUES (?, 50, ?)
+                """, (user_id, "JavaScript final sınavı ödülü"))
+
+                award_eligible_badges(db, user_id)
+                db.commit()
+
+                rewarded = True
+                completed = {
+                    "score": score,
+                    "correct_answers": correct
+                }
+
+            except Exception:
+                db.rollback()
+                db.close()
+                raise
+
+        result = {
+            "correct": correct,
+            "wrong": wrong,
+            "blank": blank,
+            "score": score,
+            "passed": passed,
+            "rewarded": rewarded,
+            "already_rewarded": passed and not rewarded
+        }
+
+    db.close()
+
+    return render_template(
+        "javascript_final.html",
+        questions=JAVASCRIPT_FINAL,
+        result=result,
+        completed=completed
+    )
 
 
 @app.route("/forgot-password", methods=["GET", "POST"])
@@ -557,6 +696,18 @@ def dashboard():
         else:
             earned_badges = []
 
+        announcements = db.execute("""
+            SELECT id, title, content, created_at
+            FROM announcements
+            ORDER BY id DESC
+            LIMIT 10
+        """).fetchall()
+
+        unread_messages = db.execute(
+            "SELECT COUNT(*) FROM private_messages WHERE receiver_id = ? AND is_read = 0",
+            (session["user_id"],)
+        ).fetchone()[0]
+
     finally:
         db.close()
 
@@ -577,7 +728,9 @@ def dashboard():
         level=user["level"],
         xp_progress=user["xp"] % 100,
         xp_to_next=100 - (user["xp"] % 100),
-        daily_claimed=(user["last_daily_reward"] == today)
+        daily_claimed=(user["last_daily_reward"] == today),
+        announcements=announcements,
+        unread_messages=unread_messages
     )
 
 
@@ -753,14 +906,43 @@ def profile():
                ORDER BY id DESC LIMIT 10""",
             (session["user_id"],)
         ).fetchall()
+
+        badges = db.execute("""
+            SELECT b.name, b.description, b.icon, ub.earned_at
+            FROM user_badges ub
+            JOIN badges b ON b.id = ub.badge_id
+            WHERE ub.user_id = ?
+            ORDER BY ub.earned_at DESC
+        """, (session["user_id"],)).fetchall()
+
+        python_exam = db.execute("""
+            SELECT score, correct_answers, completed_at
+            FROM python_final_completions
+            WHERE user_id = ?
+        """, (session["user_id"],)).fetchone()
+
+        javascript_exam = db.execute("""
+            SELECT score, correct_answers, completed_at
+            FROM javascript_final_completions
+            WHERE user_id = ?
+        """, (session["user_id"],)).fetchone()
+
     finally:
         db.close()
+
+    xp_progress = user["xp"] % 100
+    xp_to_next = 100 - xp_progress
 
     return render_template(
         "profile.html",
         user=user,
         deady_id=f"DS-{user['id']:06d}",
-        transactions=transactions
+        transactions=transactions,
+        badges=badges,
+        python_exam=python_exam,
+        javascript_exam=javascript_exam,
+        xp_progress=xp_progress,
+        xp_to_next=xp_to_next
     )
 
 
@@ -779,6 +961,115 @@ def html_baslangic():
     return render_template("html_baslangic.html")
 
 
+
+@app.route("/messages", methods=["GET", "POST"])
+@login_required
+def messages():
+    db = get_db()
+    admin_username = os.environ.get("ADMIN_USERNAME")
+    is_admin = bool(admin_username and session.get("username") == admin_username)
+
+    admin_user = db.execute(
+        "SELECT id FROM deady_users WHERE username = ?",
+        (admin_username,)
+    ).fetchone() if admin_username else None
+
+    if not admin_user:
+        db.close()
+        return "Admin hesabı bulunamadı.", 403
+
+    admin_id = admin_user["id"]
+    selected_id = None
+
+    if is_admin:
+        students = db.execute(
+            "SELECT id, username FROM deady_users WHERE id != ? ORDER BY username",
+            (admin_id,)
+        ).fetchall()
+        selected_id = request.args.get("user", type=int)
+        if request.method == "POST":
+            selected_id = request.form.get("receiver_id", type=int)
+    else:
+        students = []
+        selected_id = admin_id
+
+    if request.method == "POST":
+        content = request.form.get("content", "").strip()
+
+        if is_admin:
+            receiver_id = selected_id
+        else:
+            receiver_id = admin_id
+
+        valid_receiver = db.execute(
+            "SELECT id FROM deady_users WHERE id = ?",
+            (receiver_id,)
+        ).fetchone() if receiver_id else None
+
+        if content and len(content) <= 2000 and valid_receiver:
+            db.execute(
+                "INSERT INTO private_messages (sender_id, receiver_id, content) VALUES (?, ?, ?)",
+                (session["user_id"], receiver_id, content)
+            )
+            db.commit()
+            db.close()
+            if is_admin:
+                return redirect(url_for("messages", user=receiver_id))
+            return redirect(url_for("messages"))
+
+        flash("Mesaj boş olamaz veya alıcı seçilmelidir.")
+        db.close()
+        return redirect(url_for("messages"))
+
+    if is_admin and selected_id:
+        db.execute(
+            "UPDATE private_messages SET is_read = 1 WHERE sender_id = ? AND receiver_id = ?",
+            (selected_id, admin_id)
+        )
+        db.commit()
+        conversation = db.execute("""
+            SELECT m.*, s.username AS sender_name, r.username AS receiver_name
+            FROM private_messages m
+            JOIN deady_users s ON s.id = m.sender_id
+            JOIN deady_users r ON r.id = m.receiver_id
+            WHERE (m.sender_id = ? AND m.receiver_id = ?)
+               OR (m.sender_id = ? AND m.receiver_id = ?)
+            ORDER BY m.id ASC
+        """, (selected_id, admin_id, admin_id, selected_id)).fetchall()
+    elif not is_admin:
+        db.execute(
+            "UPDATE private_messages SET is_read = 1 WHERE sender_id = ? AND receiver_id = ?",
+            (admin_id, session["user_id"])
+        )
+        db.commit()
+        conversation = db.execute("""
+            SELECT m.*, s.username AS sender_name, r.username AS receiver_name
+            FROM private_messages m
+            JOIN deady_users s ON s.id = m.sender_id
+            JOIN deady_users r ON r.id = m.receiver_id
+            WHERE (m.sender_id = ? AND m.receiver_id = ?)
+               OR (m.sender_id = ? AND m.receiver_id = ?)
+            ORDER BY m.id ASC
+        """, (admin_id, session["user_id"], session["user_id"], admin_id)).fetchall()
+    else:
+        conversation = []
+
+    unread = db.execute(
+        "SELECT COUNT(*) FROM private_messages WHERE receiver_id = ? AND is_read = 0",
+        (session["user_id"],)
+    ).fetchone()[0]
+
+    db.close()
+    return render_template(
+        "messages.html",
+        is_admin=is_admin,
+        students=students,
+        selected_id=selected_id,
+        conversation=conversation,
+        unread=unread
+    )
+
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -786,47 +1077,195 @@ def logout():
     return redirect("/")
 
 
-@app.route("/admin")
+
+@app.route("/admin", methods=["GET", "POST"])
 @admin_required
 def admin():
     db = get_db()
 
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
+
+        if title and content:
+            db.execute(
+                "INSERT INTO announcements (title, content) VALUES (?, ?)",
+                (title, content)
+            )
+            db.commit()
+            flash("Duyuru yayınlandı!")
+        else:
+            flash("Başlık ve içerik boş bırakılamaz.")
+        db.close()
+        return redirect("/admin")
+
     users = db.execute("""
         SELECT id, username, membership, pending_membership,
-               coins, xp, level
-        FROM deady_users
-        ORDER BY id DESC
+               coins, xp, level FROM deady_users ORDER BY id DESC
     """).fetchall()
 
     stats = db.execute("""
-        SELECT
-            COUNT(*) AS total_users,
-            COALESCE(SUM(xp), 0) AS total_xp,
-            COALESCE(SUM(coins), 0) AS total_coins,
-            COALESCE(SUM(
-                CASE WHEN pending_membership IS NOT NULL
-                AND pending_membership != '' THEN 1 ELSE 0 END
-            ), 0) AS pending_count
+        SELECT COUNT(*) AS total_users,
+        COALESCE(SUM(xp), 0) AS total_xp,
+        COALESCE(SUM(coins), 0) AS total_coins,
+        COALESCE(SUM(CASE WHEN pending_membership IS NOT NULL
+        AND pending_membership != '' THEN 1 ELSE 0 END), 0) AS pending_count
         FROM deady_users
     """).fetchone()
 
     membership_counts = db.execute("""
         SELECT membership, COUNT(*) AS total
-        FROM deady_users
-        GROUP BY membership
+        FROM deady_users GROUP BY membership
     """).fetchall()
+
+    announcements = db.execute("""
+        SELECT id, title, content, created_at
+        FROM announcements ORDER BY id DESC
+    """).fetchall()
+
+    unread_messages = db.execute(
+        "SELECT COUNT(*) FROM private_messages WHERE receiver_id = ? AND is_read = 0",
+        (session["user_id"],)
+    ).fetchone()[0]
 
     db.close()
 
     return render_template(
-        "admin.html",
-        users=users,
+        "admin.html", users=users,
         total_users=stats["total_users"],
         total_xp=stats["total_xp"],
         total_coins=stats["total_coins"],
         pending_count=stats["pending_count"],
-        membership_counts=membership_counts
+        membership_counts=membership_counts,
+        announcements=announcements,
+        unread_messages=unread_messages
     )
+
+
+@app.route("/admin/announcement/<int:announcement_id>/delete", methods=["POST"])
+@admin_required
+def delete_announcement(announcement_id):
+    db = get_db()
+    db.execute("DELETE FROM announcements WHERE id = ?", (announcement_id,))
+    db.commit()
+    db.close()
+    flash("Duyuru silindi.")
+    return redirect("/admin")
+
+
+
+@app.route("/admin/membership/<int:user_id>/<action>", methods=["POST"])
+@admin_required
+def admin_membership_action(user_id, action):
+    db = get_db()
+    try:
+        user = db.execute(
+            "SELECT pending_membership FROM deady_users WHERE id = ?",
+            (user_id,)
+        ).fetchone()
+
+        if user is None or not user["pending_membership"]:
+            flash("Bekleyen başvuru bulunamadı.")
+        elif action == "approve":
+            db.execute("""
+                UPDATE deady_users
+                SET membership = ?, pending_membership = NULL
+                WHERE id = ?
+            """, (user["pending_membership"], user_id))
+            db.commit()
+            flash("Üyelik başvurusu onaylandı.")
+        elif action == "reject":
+            db.execute("""
+                UPDATE deady_users
+                SET pending_membership = NULL
+                WHERE id = ?
+            """, (user_id,))
+            db.commit()
+            flash("Üyelik başvurusu reddedildi.")
+        else:
+            flash("Geçersiz işlem.")
+    finally:
+        db.close()
+
+    return redirect("/admin")
+
+
+@app.route("/admin/member/<int:user_id>/update", methods=["POST"])
+@admin_required
+def admin_update_member(user_id):
+    db = get_db()
+    try:
+        user = db.execute(
+            "SELECT id, username, membership, coins, xp FROM deady_users WHERE id = ?",
+            (user_id,)
+        ).fetchone()
+
+        if user is None:
+            flash("Üye bulunamadı.")
+            return redirect("/admin")
+
+        try:
+            xp_change = int(request.form.get("xp_change", "0"))
+            coin_change = int(request.form.get("coin_change", "0"))
+        except (TypeError, ValueError):
+            flash("XP ve coin alanlarına geçerli sayı gir.")
+            return redirect("/admin")
+
+        if abs(xp_change) > 100000 or abs(coin_change) > 100000:
+            flash("İşlem limiti 100.000.")
+            return redirect("/admin")
+
+        new_xp = user["xp"] + xp_change
+        new_coins = user["coins"] + coin_change
+
+        if new_xp < 0 or new_coins < 0:
+            flash("XP veya coin bakiyesi sıfırın altına inemez.")
+            return redirect("/admin")
+
+        membership = request.form.get(
+            "membership", user["membership"] or "BAŞLANGIÇ"
+        ).strip().upper()
+
+        allowed_packages = {
+            "BAŞLANGIÇ", "GÜMÜŞ", "ALTIN", "ELMAS", "EFSANE"
+        }
+
+        if membership not in allowed_packages:
+            flash("Geçersiz üyelik paketi.")
+            return redirect("/admin")
+
+        new_level = (new_xp // 100) + 1
+
+        db.execute("""
+            UPDATE deady_users
+            SET xp = ?, level = ?, coins = ?, membership = ?
+            WHERE id = ?
+        """, (new_xp, new_level, new_coins, membership, user_id))
+
+        if coin_change != 0:
+            db.execute("""
+                INSERT INTO coin_transactions (user_id, amount, reason)
+                VALUES (?, ?, ?)
+            """, (
+                user_id,
+                coin_change,
+                "Yönetici tarafından düzenlendi"
+            ))
+
+        if xp_change > 0:
+            award_eligible_badges(db, user_id)
+
+        db.commit()
+        flash(f"{user['username']} hesabı güncellendi.")
+
+    except Exception:
+        db.rollback()
+        app.logger.exception("Yönetici üye güncelleme hatası.")
+        flash("İşlem sırasında hata oluştu.")
+    finally:
+        db.close()
+
+    return redirect("/admin")
 
 init_db()
 

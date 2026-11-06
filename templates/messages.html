@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080609">
+<title>DEADY | Private Messages</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+ --red:#ff174c;
+ --bg:#080609;
+ --panel:#110d12;
+ --line:#30202a;
+ --muted:#a69ba5;
+}
+
+body{
+ margin:0;
+ background:
+ radial-gradient(circle at 50% 0%,#35101e 0%,transparent 42%),
+ var(--bg);
+ color:#fff;
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+ padding:20px;
+}
+
+main{max-width:900px;margin:35px auto}
+
+.header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:15px;
+ margin-bottom:20px;
+}
+
+.logo{
+ font-size:23px;
+ font-weight:900;
+ letter-spacing:4px;
+}
+
+.logo span{color:var(--red)}
+
+.back{
+ color:#ff6682;
+ text-decoration:none;
+ font-size:13px;
+}
+
+.panel{
+ background:rgba(17,13,18,.96);
+ border:1px solid var(--line);
+ border-radius:20px;
+ overflow:hidden;
+ box-shadow:0 15px 60px #0009;
+}
+
+.top{
+ padding:22px;
+ border-bottom:1px solid var(--line);
+ background:linear-gradient(110deg,#1c1018,#100d12);
+}
+
+.top h1{
+ margin:0;
+ font-size:21px;
+ letter-spacing:3px;
+ color:var(--red);
+}
+
+.status{
+ color:#a99eaa;
+ font-size:12px;
+ margin-top:9px;
+}
+
+.status span{color:#ff496c}
+
+.selector{
+ padding:18px 22px;
+ border-bottom:1px solid var(--line);
+}
+
+select,textarea{
+ width:100%;
+ padding:14px;
+ background:#09070b;
+ color:white;
+ border:1px solid #54303d;
+ border-radius:11px;
+ outline:none;
+ font:inherit;
+}
+
+select:focus,textarea:focus{
+ border-color:var(--red);
+ box-shadow:0 0 0 3px #ff174c18;
+}
+
+button{
+ border:0;
+ background:linear-gradient(110deg,#a90030,#ff174c);
+ color:white;
+ padding:13px 19px;
+ border-radius:10px;
+ font-weight:bold;
+ cursor:pointer;
+ transition:.2s;
+}
+
+button:hover{filter:brightness(1.2);transform:translateY(-1px)}
+
+.selector button{margin-top:10px;width:100%}
+
+.chat{
+ padding:22px;
+ min-height:260px;
+ max-height:550px;
+ overflow-y:auto;
+ display:flex;
+ flex-direction:column;
+ gap:15px;
+}
+
+.message-row{
+ display:flex;
+ width:100%;
+}
+
+.message-row.mine{justify-content:flex-end}
+
+.message{
+ max-width:78%;
+ padding:13px 16px;
+ border:1px solid #342630;
+ border-radius:15px 15px 15px 4px;
+ background:#1b151d;
+ overflow-wrap:anywhere;
+}
+
+.mine .message{
+ background:linear-gradient(135deg,#68152d,#a20d36);
+ border-color:#d72b53;
+ border-radius:15px 15px 4px 15px;
+}
+
+.sender{
+ font-size:12px;
+ color:#ff718c;
+ font-weight:bold;
+ margin-bottom:7px;
+}
+
+.mine .sender{color:#ffd1dc}
+
+.message p{
+ margin:0;
+ line-height:1.6;
+ font-size:14px;
+ white-space:pre-wrap;
+}
+
+.time{
+ display:block;
+ margin-top:10px;
+ text-align:right;
+ color:#c5b4bd;
+ font-size:10px;
+}
+
+.empty{
+ text-align:center;
+ color:var(--muted);
+ padding:55px 15px;
+ font-size:13px;
+}
+
+.composer{
+ padding:20px 22px;
+ border-top:1px solid var(--line);
+ background:#100c11;
+}
+
+.composer textarea{
+ resize:vertical;
+ min-height:85px;
+ max-height:180px;
+}
+
+.send{
+ width:100%;
+ margin-top:10px;
+}
+
+.footer{
+ text-align:center;
+ color:#625760;
+ font-size:10px;
+ letter-spacing:3px;
+ margin-top:20px;
+}
+
+@media(max-width:600px){
+ body{padding:12px}
+ main{margin:15px auto}
+ .top,.selector{padding:17px}
+ .chat{padding:15px;min-height:250px}
+ .message{max-width:90%}
+ .logo{font-size:19px}
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<div class="header">
+ <div class="logo">DEADY <span>MESSAGES</span></div>
+ <a class="back" href="/dashboard">← Panele dön</a>
+</div>
+
+<div class="panel">
+
+ <div class="top">
+  <h1>PRIVATE CHAT</h1>
+  <div class="status">
+   ● ÖZEL MESAJ MERKEZİ
+   · Okunmamış mesaj: <span>{{ unread }}</span>
+  </div>
+ </div>
+
+ {% if is_admin %}
+ <div class="selector">
+  <h3>Öğrenci seç</h3>
+  <form method="GET">
+   <select name="user" required>
+    <option value="">Bir öğrenci seç</option>
+    {% for student in students %}
+    <option value="{{ student['id'] }}"
+    {% if selected_id == student['id'] %}selected{% endif %}>
+    {{ student['username'] }}
+    </option>
+    {% endfor %}
+   </select>
+   <button type="submit">SOHBETİ AÇ ↗</button>
+  </form>
+ </div>
+ {% else %}
+ <div class="selector">
+  <strong>DEADY ACADEMY YÖNETİMİ</strong>
+  <div class="status">Yönetim ile özel görüşme</div>
+ </div>
+ {% endif %}
+
+ {% if conversation %}
+ <div class="chat">
+  {% for msg in conversation %}
+  <div class="message-row {% if msg['sender_id'] == session.get('user_id') %}mine{% endif %}">
+   <div class="message">
+    <div class="sender">{{ msg['sender_name'] }}</div>
+    <p>{{ msg['content'] }}</p>
+    <small class="time">
+     {{ msg['created_at'] }}
+     · {% if msg['is_read'] %}✓✓ Okundu{% else %}✓ Gönderildi{% endif %}
+    </small>
+   </div>
+  </div>
+  {% endfor %}
+ </div>
+ {% elif not is_admin or selected_id %}
+ <div class="empty">
+  <div style="font-size:35px;margin-bottom:12px">✉</div>
+  Henüz mesaj yok.<br>
+  İlk mesajı göndererek sohbeti başlat.
+ </div>
+ {% else %}
+ <div class="empty">
+  <div style="font-size:35px;margin-bottom:12px">◈</div>
+  Mesajlaşmak için bir öğrenci seç.
+ </div>
+ {% endif %}
+
+ {% if not is_admin or selected_id %}
+ <form method="POST" class="composer">
+  {% if is_admin %}
+  <input type="hidden" name="receiver_id" value="{{ selected_id }}">
+  {% endif %}
+  <textarea name="content" maxlength="2000"
+   placeholder="Mesajını buraya yaz..."
+   required></textarea>
+  <button class="send" type="submit">MESAJI GÖNDER ↗</button>
+ </form>
+ {% endif %}
+
+</div>
+
+<div class="footer">DEADY SALVO · PRIVATE COMMUNICATION SYSTEM</div>
+
+</main>
+</body>
+</html>

@@ -1,157 +1,304 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY SALVO | Kayıt Ol</title>
+<meta name="theme-color" content="#09080c">
+<title>DEADY ACADEMY | Hesap Oluştur</title>
+
 <style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: radial-gradient(ellipse at top, #32104c, #09060f 65%);
-    color: white;
-    font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+:root{
+ --red:#f12d49;
+ --purple:#a66aff;
+ --bg:#09080c;
+ --muted:#aaa5b5;
 }
-.card {
-    width: 100%;
-    max-width: 420px;
-    padding: 38px 28px;
-    background: rgba(24, 15, 36, .92);
-    border: 1px solid #7136a0;
-    border-radius: 22px;
-    box-shadow: 0 0 45px #8b27c544;
-    text-align: center;
+body{
+ margin:0;min-height:100vh;padding:25px;
+ background:
+ radial-gradient(ellipse at 15% 30%,#48132355,transparent 42%),
+ radial-gradient(ellipse at 85% 80%,#36204d55,transparent 40%),
+ #09080c;
+ color:#fff;font-family:Arial,sans-serif;
 }
-.logo {
-    font-size: 30px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    color: white;
-    text-shadow: 0 0 18px #a855f7;
+a{color:inherit;text-decoration:none}
+.nav{
+ max-width:1150px;margin:0 auto 45px;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:20px;
 }
-.logo span { color: #c084fc; }
-.subtitle { color: #a99ab8; font-size: 13px; margin: 12px 0 30px; }
-h2 { letter-spacing: 2px; margin-bottom: 25px; }
-.field { text-align: left; margin-bottom: 18px; }
-label {
-    display: block;
-    color: #c084fc;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 9px;
-    letter-spacing: 1px;
+.logo{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:2px}
+.logo-mark{
+ width:43px;height:43px;display:grid;place-items:center;
+ color:white;background:linear-gradient(140deg,#ff3450,#811b38);
+ border-radius:13px;font-size:23px;
+ box-shadow:0 5px 25px #ff263f35;
 }
-input {
-    width: 100%;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #49305e;
-    background: #0e0a15;
-    color: white;
-    outline: none;
-    font-size: 15px;
+.logo small{display:block;color:var(--red);font-size:11px;margin-top:4px}
+.nav-link{
+ padding:12px 20px;border:1px solid #ffffff18;
+ border-radius:30px;color:#ddd;font-size:13px;
+ background:#ffffff08;
 }
-input:focus {
-    border-color: #bd65ff;
-    box-shadow: 0 0 12px #9333ea66;
+.nav-link:hover{border-color:var(--red);color:white}
+
+.layout{
+ max-width:1100px;margin:auto;
+ display:grid;grid-template-columns:1fr 470px;
+ gap:55px;align-items:center;
 }
-.password-wrap { display: flex; gap: 7px; }
-.password-wrap input { min-width: 0; }
-.show {
-    background: #30203e;
-    color: #d8b4fe;
-    border: 1px solid #70449a;
-    border-radius: 9px;
-    padding: 0 12px;
+.hero{padding:25px 10px}
+.eyebrow{
+ color:#ff7184;font-size:11px;letter-spacing:4px;
+ margin-bottom:22px;
 }
-.submit {
-    width: 100%;
-    padding: 16px;
-    border: 0;
-    border-radius: 10px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    background: linear-gradient(110deg, #7e22ce, #c026d3);
-    box-shadow: 0 0 20px #9333ea66;
-    cursor: pointer;
-    margin-top: 8px;
+.hero h1{
+ font-size:clamp(42px,6vw,72px);
+ line-height:1.02;letter-spacing:-3px;margin:0;
 }
-.submit:hover { box-shadow: 0 0 30px #c026d3; }
-.message { color: #f0abfc; font-size: 13px; margin: 10px 0; }
-.bottom { color: #a99ab8; font-size: 14px; margin-top: 25px; }
-a { color: #d8b4fe; text-decoration: none; font-weight: bold; }
-a:hover { color: white; }
-.back { display: block; margin-top: 20px; color: #8e7a9e; font-size: 12px; }
+.hero h1 span{
+ color:var(--red);
+}
+.hero p{
+ color:#aaa5b5;line-height:1.9;
+ max-width:430px;font-size:15px;margin-top:25px;
+}
+.art{
+ height:230px;max-width:400px;margin-top:35px;
+ position:relative;display:grid;place-items:center;
+}
+.art-ring{
+ width:205px;height:205px;border:1px solid #ff345055;
+ border-radius:50%;position:absolute;
+ box-shadow:0 0 65px #ff263f18,inset 0 0 55px #a22b461c;
+}
+.art-ring:before{
+ content:"";position:absolute;inset:20px;
+ border:1px solid #a66aff55;border-radius:50%;
+}
+.art-symbol{
+ font-size:105px;font-weight:900;color:#f13b58;
+ text-shadow:0 0 35px #f12d4966;
+ z-index:1;
+}
+.status{
+ display:flex;align-items:center;gap:10px;
+ color:#aaa5b5;font-size:11px;letter-spacing:2px;
+ margin-top:20px;
+}
+.dot{
+ width:8px;height:8px;border-radius:50%;
+ background:#45d99a;box-shadow:0 0 12px #45d99a;
+}
+.card{
+ padding:32px;background:linear-gradient(145deg,#19131c,#100d14);
+ border:1px solid #ffffff20;border-radius:22px;
+ box-shadow:0 25px 80px #0009,0 0 35px #e92d4810;
+ position:relative;overflow:hidden;
+}
+.card:before{
+ content:"";position:absolute;top:0;left:0;width:100%;height:3px;
+ background:linear-gradient(90deg,var(--red),var(--purple));
+}
+.card-top{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;margin-bottom:30px;
+}
+.card-top span{font-size:10px;letter-spacing:2px;color:#ff7587}
+.card-top .access{color:#aaa5b5}
+.card h2{font-size:27px;margin:0 0 9px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 24px}
+.package{
+ padding:16px;border:1px solid #743044;
+ border-radius:13px;background:#24121b;margin-bottom:25px;
+}
+.package-label{font-size:10px;letter-spacing:2px;color:#ff8798}
+.package-name{font-size:21px;font-weight:900;margin-top:9px}
+.message{
+ padding:12px;border-radius:10px;
+ color:#ffb7c1;background:#391622;
+ border:1px solid #a72d46;font-size:13px;margin:12px 0;
+}
+.field{margin-bottom:19px}
+label{
+ display:block;font-size:11px;letter-spacing:1.5px;
+ color:#d1c7d5;font-weight:bold;margin-bottom:9px;
+}
+input{
+ width:100%;padding:16px;
+ background:#0b0910;color:white;
+ border:1px solid #39303f;border-radius:11px;
+ outline:none;font-size:14px;transition:.2s;
+}
+input:focus{
+ border-color:var(--red);
+ box-shadow:0 0 0 3px #f12d4918;
+}
+input::placeholder{color:#716979}
+.password-wrap{display:flex;gap:9px}
+.password-wrap input{min-width:0}
+.show{
+ border:1px solid #58303e;border-radius:10px;
+ background:#24151f;color:#ff9baa;
+ padding:0 13px;cursor:pointer;font-size:11px;
+}
+.submit{
+ width:100%;padding:17px;margin-top:8px;
+ border:0;border-radius:11px;color:white;
+ background:linear-gradient(100deg,#b91f3c,#ed3853);
+ font-weight:900;letter-spacing:2px;font-size:13px;
+ cursor:pointer;box-shadow:0 9px 25px #ff263f25;
+ transition:.2s;
+}
+.submit:hover{transform:translateY(-2px);box-shadow:0 12px 30px #ff263f50}
+.security{
+ text-align:center;color:#8e8798;font-size:11px;
+ margin-top:16px;
+}
+.bottom{text-align:center;color:#aaa0b0;font-size:13px;margin-top:25px}
+.bottom a{color:#ff657b;font-weight:bold}
+.back{
+ display:block;text-align:center;color:#817786;
+ font-size:11px;margin-top:20px;
+}
+.footer{
+ text-align:center;color:#625967;font-size:10px;
+ letter-spacing:2px;margin-top:28px;
+}
+@media(max-width:850px){
+ body{padding:18px}
+ .nav{margin-bottom:20px}
+ .layout{grid-template-columns:1fr;max-width:480px;gap:10px}
+ .hero{text-align:center;padding:12px 5px}
+ .hero h1{font-size:43px}
+ .hero p{font-size:13px;margin:15px auto}
+ .art{height:125px;margin:10px auto}
+ .art-ring{width:115px;height:115px}
+ .art-symbol{font-size:65px}
+ .status{justify-content:center;margin-top:8px}
+ .card{padding:25px 21px}
+}
+@media(max-width:380px){
+ .card{padding:22px 16px}
+ .hero h1{font-size:36px}
+}
 </style>
 </head>
+
 <body>
+
+<header class="nav">
+ <a class="logo" href="/">
+  <span class="logo-mark">D</span>
+  <span>DEADY<small>ACADEMY</small></span>
+ </a>
+ <a class="nav-link" href="/login">Giriş Yap ↗</a>
+</header>
+
+<main class="layout">
+
+<section class="hero">
+ <div class="eyebrow">// GELECEĞİNİ KODLA //</div>
+ <h1>DEADY<br><span>ACADEMY.</span></h1>
+ <p>
+  Bilginin gücünü keşfet. Yeni beceriler kazan.
+  Yazılım dünyasında kendi yolunu oluştur.
+ </p>
+
+ <div class="art">
+  <div class="art-ring"></div>
+  <div class="art-symbol">D</div>
+ </div>
+
+ <div class="status">
+  <span class="dot"></span>
+  SYSTEM ONLINE · ACADEMY 2026
+ </div>
+</section>
+
+<section>
 <div class="card">
-    <div class="logo">DEADY <span>SALVO</span></div>
-    <p class="subtitle">KENDİ DÜNYANI OLUŞTUR</p>
-    <h2>HESAP OLUŞTUR</h2>
-    <div style="margin:15px 0 22px;padding:14px;border:1px solid #b78b43;border-radius:12px;background:#17120b;">
-        <div style="font-size:11px;color:#c9a45e;letter-spacing:2px;">SEÇİLEN ÜYELİK PAKETİ</div>
-        <div style="font-size:21px;font-weight:900;color:#f5d58b;margin-top:7px;">
-            {{ selected_package|default('BAŞLANGIÇ') }}
-        </div>
-    </div>
 
-    {% with messages = get_flashed_messages() %}
-    {% for message in messages %}
-    <p class="message">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+ <div class="card-top">
+  <span>DEADY REGISTRATION</span>
+  <span class="access">NEW ACCOUNT</span>
+ </div>
 
-    <form method="POST">
-        <input type="hidden" name="membership" value="{{ selected_package|default('BAŞLANGIÇ') }}">
-        <div class="field">
-            <label>KULLANICI ADI</label>
-            <input type="text" name="username"
-                   placeholder="Kullanıcı adını belirle"
-                   minlength="3" maxlength="20"
-                   pattern="[A-Za-z0-9_]{3,20}"
-                   autocomplete="username" required>
-        </div>
+ <h2>Hesap Oluştur</h2>
+ <p class="sub">Yeni bir başlangıç, yeni bir seviye.</p>
 
-        <div class="field">
-            <label>E-POSTA ADRESİ</label>
-            <input type="email" name="email"
-                   placeholder="ornek@gmail.com"
-                   autocomplete="email" required>
-        </div>
+ <div class="package">
+  <div class="package-label">SEÇİLEN ÜYELİK PAKETİ</div>
+  <div class="package-name">{{ selected_package|default('BAŞLANGIÇ') }}</div>
+ </div>
 
-        <div class="field">
-            <label>ŞİFRE</label>
-            <div class="password-wrap">
-                <input id="password" type="password" name="password"
-                       placeholder="En az 8 karakter"
-                       minlength="8" autocomplete="new-password" required>
-                <button class="show" type="button"
-                        onclick="togglePassword()">GÖSTER</button>
-            </div>
-        </div>
+ {% with messages = get_flashed_messages() %}
+ {% for message in messages %}
+ <p class="message">{{ message }}</p>
+ {% endfor %}
+ {% endwith %}
 
-        <button class="submit" type="submit">HESAP OLUŞTUR</button>
-    </form>
+ <form method="POST">
+  <input type="hidden" name="membership" value="{{ selected_package|default('BAŞLANGIÇ') }}">
 
-    <p class="bottom">Zaten hesabın var mı? <a href="/login">GİRİŞ YAP</a></p>
-    <a class="back" href="/">← ANA SAYFAYA DÖN</a>
+  <div class="field">
+   <label>KULLANICI ADI</label>
+   <input type="text" name="username"
+    placeholder="Kullanıcı adını belirle"
+    minlength="3" maxlength="20"
+    pattern="[A-Za-z0-9_]{3,20}"
+    autocomplete="username" required>
+  </div>
+
+  <div class="field">
+   <label>E-POSTA ADRESİ</label>
+   <input type="email" name="email"
+    placeholder="ornek@gmail.com"
+    autocomplete="email" required>
+  </div>
+
+  <div class="field">
+   <label>ŞİFRE</label>
+   <div class="password-wrap">
+    <input id="password" type="password" name="password"
+     placeholder="En az 8 karakter"
+     minlength="8" autocomplete="new-password" required>
+    <button class="show" type="button" onclick="togglePassword()">GÖSTER</button>
+   </div>
+  </div>
+
+  <button class="submit" type="submit">HESAP OLUŞTUR →</button>
+ </form>
+
+ <div class="security">◈ Kişisel bilgileriniz güvenle korunur.</div>
+
+ <p class="bottom">
+  Zaten hesabın var mı? <a href="/login">Giriş Yap</a>
+ </p>
+
+ <a class="back" href="/">← ANA SAYFAYA DÖN</a>
+
 </div>
 
+<div class="footer">DEADY ACADEMY © 2026 · ALL RIGHTS RESERVED</div>
+</section>
+
+</main>
+
 <script>
-function togglePassword() {
-    const field = document.getElementById("password");
-    field.type = field.type === "password" ? "text" : "password";
+function togglePassword(){
+ const field=document.getElementById("password");
+ const button=document.querySelector(".show");
+ if(field.type==="password"){
+  field.type="text";
+  button.textContent="GİZLE";
+ }else{
+  field.type="password";
+  button.textContent="GÖSTER";
+ }
 }
 </script>
+
 </body>
 </html>
-

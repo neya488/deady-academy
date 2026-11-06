@@ -3,442 +3,303 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080609">
-<title>DEADY ∅ | Beyond The System</title>
+<meta name="theme-color" content="#050505">
+<title>DEADY ACADEMY | Giriş Yap</title>
 
 <style>
 *{box-sizing:border-box}
-
 :root{
- --red:#ff263f;
- --purple:#a855f7;
- --bg:#080609;
- --muted:#938b9a;
+ --red:#ed263f;
+ --bg:#050505;
+ --muted:#9999a3;
 }
-
 body{
- margin:0;
- min-height:100vh;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:25px;
- overflow-x:hidden;
+ margin:0;min-height:100vh;padding:22px;
+ color:#fff;font-family:Arial,sans-serif;
  background:
- radial-gradient(ellipse at 50% 45%,#35101d 0%,transparent 45%),
- radial-gradient(circle at 10% 10%,#24102e,transparent 35%),
- #080609;
- color:white;
- font-family:Arial,sans-serif;
+ radial-gradient(ellipse at 50% 45%,#1b1013 0%,transparent 55%),
+ #050505;
+ overflow-x:hidden;
 }
-
 body:before{
- content:"";
- position:fixed;
- inset:0;
- pointer-events:none;
- opacity:.13;
+ content:"";position:fixed;inset:0;pointer-events:none;
+ opacity:.08;
  background-image:
- linear-gradient(#ffffff08 1px,transparent 1px),
- linear-gradient(90deg,#ffffff08 1px,transparent 1px);
- background-size:45px 45px;
+ linear-gradient(#ffffff10 1px,transparent 1px),
+ linear-gradient(90deg,#ffffff10 1px,transparent 1px);
+ background-size:55px 55px;
 }
-
-.orb{
- position:fixed;
- width:340px;
- height:340px;
- border:1px solid #ff263f30;
- border-radius:50%;
- box-shadow:0 0 80px #ff263f12,inset 0 0 70px #ff263f12;
- animation:rotate 25s linear infinite;
- pointer-events:none;
+a{color:inherit;text-decoration:none}
+.nav{
+ max-width:1100px;margin:0 auto 38px;
+ display:flex;justify-content:space-between;
+ align-items:center;position:relative;z-index:2;
 }
-
-.orb:before,.orb:after{
- content:"";
- position:absolute;
- inset:25px;
- border:1px dashed #a34aff35;
- border-radius:50%;
+.logo{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:2px}
+.logo-icon{
+ width:43px;height:43px;border-radius:12px;
+ display:grid;place-items:center;
+ background:linear-gradient(145deg,#f12d49,#831326);
+ color:white;font-size:23px;
+ box-shadow:0 5px 25px #ed263f25;
 }
-
-.orb:after{
- inset:55px;
- border-color:#ff263f35;
+.logo small{display:block;color:var(--red);font-size:10px;margin-top:4px}
+.nav-link{
+ padding:11px 18px;border:1px solid #ffffff35;
+ border-radius:30px;font-size:13px;color:#ddd;
+ transition:.2s;
 }
-
-@keyframes rotate{
- to{transform:rotate(360deg)}
-}
+.nav-link:hover{border-color:var(--red);color:white}
 
 .layout{
- width:100%;
- max-width:1050px;
- display:grid;
- grid-template-columns:1fr 420px;
- gap:55px;
- align-items:center;
- position:relative;
- z-index:1;
+ max-width:1000px;margin:auto;
+ display:grid;grid-template-columns:1fr 470px;
+ gap:50px;align-items:center;
+ position:relative;z-index:1;
 }
-
-.brand{padding:25px}
-
-.symbol{
- width:75px;
- height:75px;
- display:grid;
- place-items:center;
- border:1px solid var(--red);
- color:var(--red);
- font-size:42px;
- font-weight:900;
- transform:rotate(45deg);
- box-shadow:0 0 35px #ff263f35;
- margin:0 0 35px 12px;
+.hero{text-align:center;padding:25px 10px}
+.emblem{
+ width:100px;height:100px;margin:0 auto 25px;
+ display:grid;place-items:center;
+ border:1px solid #ed263f70;border-radius:50%;
+ color:var(--red);font-size:55px;font-weight:900;
+ box-shadow:0 0 45px #ed263f15,inset 0 0 30px #ed263f10;
 }
-
-.symbol span{transform:rotate(-45deg)}
-
-.brand h1{
- font-size:clamp(42px,7vw,76px);
- line-height:.95;
- letter-spacing:-3px;
- margin:0;
- font-weight:950;
+.eyebrow{
+ color:#aaa;font-size:11px;letter-spacing:6px;
+ margin-bottom:20px;
 }
-
-.brand h1 span{
- color:var(--red);
- text-shadow:0 0 35px #ff263f70;
+.hero h1{
+ font-size:clamp(38px,6vw,65px);
+ letter-spacing:-2px;line-height:1.05;margin:0;
 }
-
-.tagline{
- color:#c5bacb;
- letter-spacing:5px;
- font-size:12px;
- margin-top:22px;
+.hero h1 span{color:var(--red)}
+.hero p{
+ color:#aaa;line-height:1.8;font-size:15px;
+ margin:20px auto;max-width:370px;
 }
-
-.description{
- color:var(--muted);
- line-height:1.8;
- max-width:390px;
- font-size:14px;
- margin-top:35px;
+.line{
+ width:65px;height:2px;margin:25px auto;
+ background:var(--red);box-shadow:0 0 15px #ed263f;
 }
-
 .status{
- display:flex;
- align-items:center;
- gap:10px;
- margin-top:35px;
- color:#aaa0b1;
- font-size:11px;
- letter-spacing:2px;
+ display:flex;justify-content:center;align-items:center;
+ gap:10px;color:#aaa;font-size:10px;letter-spacing:3px;
 }
-
 .dot{
- width:8px;
- height:8px;
- border-radius:50%;
- background:var(--red);
- box-shadow:0 0 13px var(--red);
- animation:pulse 1.5s infinite;
+ width:7px;height:7px;border-radius:50%;
+ background:#45cf91;box-shadow:0 0 12px #45cf91;
 }
-
-@keyframes pulse{
- 50%{opacity:.3;box-shadow:0 0 3px var(--red)}
-}
-
 .card{
- width:100%;
- padding:35px 29px;
- background:linear-gradient(145deg,#1b111bdc,#100c14ed);
- border:1px solid #71304080;
- border-radius:22px;
- box-shadow:0 25px 90px #000b,0 0 45px #ff263f12;
- backdrop-filter:blur(18px);
- animation:appear .8s ease both;
+ padding:34px 30px;
+ background:linear-gradient(145deg,#111113f5,#090909f5);
+ border:1px solid #ffffff20;border-radius:20px;
+ box-shadow:0 25px 80px #000b,0 0 35px #ed263f0c;
+ position:relative;overflow:hidden;
+ animation:appear .7s ease both;
 }
-
+.card:before{
+ content:"";position:absolute;top:0;left:0;
+ width:100%;height:2px;
+ background:linear-gradient(90deg,transparent,var(--red),#ffffff80,transparent);
+}
 @keyframes appear{
- from{opacity:0;transform:translateY(25px)}
+ from{opacity:0;transform:translateY(18px)}
  to{opacity:1;transform:translateY(0)}
 }
-
 .card-top{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:30px;
+ display:flex;justify-content:space-between;
+ gap:10px;margin-bottom:30px;
 }
-
-.card-top span{
- font-size:10px;
- color:#ff6475;
- letter-spacing:2px;
+.card-top span{font-size:10px;letter-spacing:2px;color:var(--red)}
+.card-top .access{color:#85858d}
+.heading{
+ display:flex;align-items:center;gap:13px;
+ margin-bottom:8px;
 }
-
-.card-top .access{color:#817786}
-
-.card h2{
- font-size:25px;
- letter-spacing:1px;
- margin:0 0 8px;
+.heading-mark{
+ width:34px;height:34px;border-radius:9px;
+ background:#ed263f18;color:var(--red);
+ display:grid;place-items:center;font-size:19px;
 }
-
-.sub{
- color:#928696;
- font-size:13px;
- margin:0 0 28px;
-}
-
+.card h2{font-size:26px;margin:0;letter-spacing:1px}
+.sub{color:var(--muted);font-size:13px;margin:10px 0 28px}
 .message{
- padding:12px;
- background:#391622;
- border:1px solid #a72d46;
- border-radius:9px;
- color:#ffb2bd;
- font-size:13px;
- margin:12px 0;
+ padding:12px;background:#271116;
+ border:1px solid #853041;border-radius:9px;
+ color:#ffb2bd;font-size:13px;margin:12px 0;
 }
-
-.field{
- margin-bottom:20px;
- text-align:left;
-}
-
+.field{margin-bottom:20px}
 label{
- display:block;
- color:#c9b9c9;
- font-size:11px;
- font-weight:bold;
- letter-spacing:2px;
- margin-bottom:10px;
+ display:block;color:#c9c9cf;font-size:11px;
+ font-weight:bold;letter-spacing:1.5px;margin-bottom:10px;
 }
-
+.input-wrap{position:relative}
 input{
- width:100%;
- padding:16px;
- border:1px solid #40303e;
- border-radius:10px;
- background:#0c0910;
- color:white;
- outline:none;
- font-size:15px;
- transition:.25s;
+ width:100%;padding:16px;
+ border:1px solid #38383d;border-radius:11px;
+ background:#080808;color:white;
+ outline:none;font-size:15px;transition:.2s;
 }
-
 input:focus{
  border-color:var(--red);
- box-shadow:0 0 18px #ff263f25;
+ box-shadow:0 0 0 3px #ed263f15;
 }
-
-input::placeholder{color:#655b69}
-
-.password-wrap{
- display:flex;
- gap:8px;
-}
-
+input::placeholder{color:#66666f}
+.password-wrap{display:flex;gap:9px}
 .password-wrap input{min-width:0}
-
 .show{
- border:1px solid #58303e;
- border-radius:9px;
- background:#21131c;
- color:#ff8795;
- padding:0 12px;
- cursor:pointer;
- font-size:11px;
+ border:1px solid #4a3035;border-radius:10px;
+ background:#171012;color:#ff8795;
+ padding:0 13px;cursor:pointer;font-size:11px;
 }
-
+.forgot{
+ display:flex;justify-content:flex-end;
+ margin:-3px 0 23px;font-size:12px;
+}
+.forgot a{color:#ed5367}
+.forgot a:hover{color:white}
 .submit{
- width:100%;
- margin-top:9px;
- padding:17px;
- border:0;
- border-radius:10px;
- color:white;
- background:linear-gradient(100deg,#b51630,#f02b49);
- font-weight:900;
- font-size:13px;
- letter-spacing:3px;
- cursor:pointer;
- box-shadow:0 8px 30px #ff263f30;
- transition:.25s;
+ width:100%;padding:17px;border:1px solid #ed263f;
+ border-radius:11px;color:white;
+ background:linear-gradient(100deg,#a9132a,#e92743);
+ font-weight:900;font-size:13px;letter-spacing:3px;
+ cursor:pointer;box-shadow:0 8px 25px #ed263f25;
+ transition:.2s;
 }
-
 .submit:hover{
  transform:translateY(-2px);
- box-shadow:0 10px 35px #ff263f70;
+ box-shadow:0 10px 30px #ed263f50;
 }
-
 .bottom{
- text-align:center;
- color:#938696;
- font-size:13px;
- margin-top:25px;
+ text-align:center;color:#aaa;font-size:13px;margin-top:26px;
 }
-
-a{
- color:#ff687b;
- text-decoration:none;
- font-weight:bold;
-}
-
-a:hover{color:white}
-
+.bottom a{color:#ff657a;font-weight:bold}
 .back{
- display:block;
- text-align:center;
- margin-top:22px;
- color:#817786;
- font-size:11px;
- letter-spacing:1px;
+ display:block;text-align:center;margin-top:20px;
+ color:#777;font-size:11px;letter-spacing:1px;
 }
-
 .footer{
- position:relative;
- z-index:1;
- text-align:center;
- color:#554b5a;
- font-size:10px;
- letter-spacing:2px;
- margin-top:25px;
+ max-width:1000px;margin:45px auto 10px;
+ text-align:center;color:#666;font-size:10px;
+ letter-spacing:3px;position:relative;z-index:1;
 }
-
+.footer-line{
+ height:1px;background:linear-gradient(90deg,transparent,#8c2635,transparent);
+ margin-bottom:20px;
+}
 @media(max-width:800px){
- .layout{
-  grid-template-columns:1fr;
-  max-width:430px;
-  gap:25px;
- }
- .brand{
-  text-align:center;
-  padding:10px;
- }
- .symbol{
-  margin:15px auto 30px;
- }
- .brand h1{font-size:49px}
- .description{display:none}
- .status{justify-content:center;margin-top:20px}
- .card{padding:30px 23px}
+ body{padding:17px}
+ .nav{margin-bottom:24px}
+ .layout{grid-template-columns:1fr;max-width:460px;gap:10px}
+ .hero{padding:10px 5px 22px}
+ .emblem{width:65px;height:65px;font-size:37px;margin-bottom:15px}
+ .eyebrow{font-size:9px;letter-spacing:4px;margin-bottom:12px}
+ .hero h1{font-size:40px}
+ .hero p{font-size:13px;margin:12px auto}
+ .line{margin:15px auto}
+ .card{padding:27px 22px}
+ .footer{margin-top:30px}
 }
-
 @media(max-width:380px){
- .brand h1{font-size:40px}
- .card{padding:25px 18px}
+ .card{padding:23px 17px}
+ .hero h1{font-size:34px}
+ .nav-link{padding:9px 12px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="orb"></div>
+<header class="nav">
+ <a href="/" class="logo">
+  <span class="logo-icon">D</span>
+  <span>DEADY<small>ACADEMY</small></span>
+ </a>
+ <a href="/register" class="nav-link">＋ Kayıt Ol ↗</a>
+</header>
 
-<div class="layout">
+<main class="layout">
 
-<section class="brand">
-
-<div class="symbol"><span>∅</span></div>
-
-<h1>DEADY<br><span>ACADEMY</span></h1>
-
-<div class="tagline">BEYOND THE SYSTEM</div>
-
-<p class="description">
-Sınırlarını aş. Bilgini geliştir. Kendi geleceğini kodla.
-DEADY dünyasında yeni bir seviyeye geç.
-</p>
-
-<div class="status">
-<span class="dot"></span>
-SYSTEM ONLINE
-</div>
-
+<section class="hero">
+ <div class="emblem">D</div>
+ <div class="eyebrow">BEYOND THE SYSTEM</div>
+ <h1>DEADY <span>ACADEMY</span></h1>
+ <p>Bilginin gücüyle geleceğini kodla.</p>
+ <div class="line"></div>
+ <div class="status">
+  <span class="dot"></span>
+  SYSTEM ONLINE · 2026
+ </div>
 </section>
 
 <section>
-
 <div class="card">
 
-<div class="card-top">
-<span>DEADY AUTHENTICATION</span>
-<span class="access">SECURE ACCESS</span>
-</div>
+ <div class="card-top">
+  <span>DEADY AUTHENTICATION</span>
+  <span class="access">SECURE ACCESS</span>
+ </div>
 
-<h2>SİSTEME GİRİŞ</h2>
-<p class="sub">Tekrar hoş geldin. Seni bekliyorduk.</p>
+ <div class="heading">
+  <div class="heading-mark">↗</div>
+  <h2>GİRİŞ YAP</h2>
+ </div>
+ <p class="sub">Tekrar hoş geldin. Devam etmek için giriş yap.</p>
 
-{% with messages = get_flashed_messages() %}
-{% for message in messages %}
-<p class="message">{{ message }}</p>
-{% endfor %}
-{% endwith %}
+ {% with messages = get_flashed_messages() %}
+ {% for message in messages %}
+ <p class="message">{{ message }}</p>
+ {% endfor %}
+ {% endwith %}
 
-<form method="POST">
+ <form method="POST">
 
-<div class="field">
-<label>KULLANICI ADI</label>
-<input
- type="text"
- name="username"
- placeholder="Kullanıcı adın"
- autocomplete="username"
- required>
-</div>
+  <div class="field">
+   <label>KULLANICI ADI</label>
+   <input type="text" name="username"
+    placeholder="Kullanıcı adın"
+    autocomplete="username" required>
+  </div>
 
-<div class="field">
-<label>ŞİFRE</label>
-<div class="password-wrap">
-<input
- id="password"
- type="password"
- name="password"
- placeholder="Şifren"
- autocomplete="current-password"
- required>
+  <div class="field">
+   <label>ŞİFRE</label>
+   <div class="password-wrap">
+    <input id="password" type="password" name="password"
+     placeholder="Şifren"
+     autocomplete="current-password" required>
+    <button class="show" type="button" onclick="togglePassword()">GÖSTER</button>
+   </div>
+  </div>
 
-<button
- class="show"
- type="button"
- onclick="togglePassword()">
-GÖSTER
-</button>
-</div>
-</div>
+  <div class="forgot">
+   <a href="/forgot-password">Şifremi Unuttum?</a>
+  </div>
 
-<button class="submit" type="submit">
-SİSTEME GİR →
-</button>
+  <button class="submit" type="submit">SİSTEME GİR →</button>
 
-</form>
-<div style="text-align:center;margin:18px 0;"><a href="/forgot-password">ŞİFREMİ UNUTTUM?</a></div>
+ </form>
 
-<p class="bottom">
-Hesabın yok mu? <a href="/register">HESAP OLUŞTUR</a>
-</p>
+ <p class="bottom">
+  Hesabın yok mu? <a href="/register">Kayıt Ol →</a>
+ </p>
 
-<a class="back" href="/">← ANA SAYFAYA DÖN</a>
+ <a class="back" href="/">← ANA SAYFAYA DÖN</a>
 
 </div>
-
-<div class="footer">
-DEADY ACADEMY © 2026
-</div>
-
 </section>
-</div>
+
+</main>
+
+<footer class="footer">
+ <div class="footer-line"></div>
+ DEADY ACADEMY © 2026 &nbsp; | &nbsp; BEYOND THE SYSTEM
+</footer>
 
 <script>
 function togglePassword(){
  const field=document.getElementById("password");
  const button=document.querySelector(".show");
-
  if(field.type==="password"){
   field.type="text";
   button.textContent="GİZLE";

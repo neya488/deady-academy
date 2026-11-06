@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY SALVO | JavaScript Final</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#08070e;color:#f5f3ff;font-family:Arial,sans-serif}
+.final-wrap{max-width:900px;margin:35px auto;padding:20px}
+.final-hero{text-align:center;padding:35px 20px;border:1px solid #792cff;border-radius:18px;background:linear-gradient(135deg,#180d2c,#090910);box-shadow:0 0 25px #792cff33}
+.final-hero h1{color:#c69aff;letter-spacing:3px}
+.final-hero h2{color:#fff}
+.final-hero p{color:#ccc}
+.final-info{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:20px}
+.final-info span{background:#211433;border:1px solid #792cff;padding:9px 14px;border-radius:20px;color:#e2ccff}
+.final-question{background:#101018;border:1px solid #29213c;border-radius:14px;padding:20px;margin:18px 0}
+.final-question h3{color:#d8bdff;margin-top:0}
+.final-option{display:block;padding:12px;margin:9px 0;border:1px solid #393044;border-radius:9px;cursor:pointer;color:#eee}
+.final-option:has(input:checked){border-color:#a855f7;background:#28163e}
+.final-option input{margin-right:10px;accent-color:#a855f7}
+.final-submit{width:100%;padding:17px;border:0;border-radius:12px;background:linear-gradient(90deg,#792cff,#e02b65);color:white;font-size:17px;font-weight:bold;cursor:pointer}
+.final-result{text-align:center;padding:22px;margin:20px 0;border:1px solid #792cff;border-radius:14px;background:#1b1129}
+.final-result h2{color:#d5aaff}
+.final-back{display:inline-block;margin-top:20px;color:#c69aff;text-decoration:none}
+@media(max-width:600px){.final-wrap{padding:12px}.final-hero{padding:25px 12px}.final-question{padding:15px}}
+</style>
+</head>
+<body>
+<div class="final-wrap">
+
+<div class="final-hero">
+<h1>DEADY SALVO</h1>
+<h2>JAVASCRIPT FINAL EXAM</h2>
+<p>Bilgini kanıtla. Seviyeni yükselt.</p>
+<div class="final-info">
+<span>30 SORU</span>
+<span>100 PUAN</span>
+<span>GEÇME: 21 DOĞRU</span>
+</div>
+</div>
+
+{% if completed %}
+<div class="final-result">
+<h2>🏆 SINAV BAŞARIYLA TAMAMLANDI</h2>
+<p>Önceki başarılı sınav puanın: {{ completed["score"] }}/100</p>
+<p>Doğru cevap: {{ completed["correct_answers"] }}/30</p>
+<p>İlk başarı ödülün daha önce hesabına tanımlandı.</p>
+</div>
+{% endif %}
+
+{% if result %}
+<div class="final-result">
+<h2>{% if result.passed %}🏆 TEBRİKLER, BAŞARDIN!{% else %}SINAV TAMAMLANMADI{% endif %}</h2>
+<h2>{{ result.score }}/100 PUAN</h2>
+<p>Doğru: {{ result.correct }} | Yanlış: {{ result.wrong }} | Boş: {{ result.blank }}</p>
+{% if result.rewarded %}
+<p>🎁 +100 XP ve +50 DEADY COINS kazandın!</p>
+{% elif result.already_rewarded %}
+<p>Bu sınavın ödülünü daha önce aldın. Tekrar ödül verilmedi.</p>
+{% elif not result.passed %}
+<p>Geçmek için en az 21 doğru cevap vermelisin.</p>
+{% endif %}
+</div>
+{% endif %}
+
+<form method="POST">
+{% for question in questions %}
+{% set qindex = loop.index0 %}
+<div class="final-question">
+<h3>{{ loop.index }}. {{ question.question }}</h3>
+{% for option in question.options %}
+<label class="final-option">
+<input type="radio" name="q{{ qindex }}" value="{{ loop.index0 }}">
+{{ option }}
+</label>
+{% endfor %}
+</div>
+{% endfor %}
+<button class="final-submit" type="submit">SINAVI TAMAMLA</button>
+</form>
+
+<a class="final-back" href="/dashboard">← Panele dön</a>
+</div>
+</body>
+</html>

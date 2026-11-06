@@ -1,68 +1,245 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DEADY ACADEMY | Premium Panel</title>
+<meta name="theme-color" content="#070b19">
+<title>DEADY NEXUS | Student Command Center</title>
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+ --bg:#070b19;
+ --panel:#0d1428;
+ --panel2:#111b35;
+ --blue:#00d9ff;
+ --purple:#8b5cff;
+ --text:#edf4ff;
+ --muted:#8795b3;
+ --border:#26375a;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#090711;color:#f5f0ff;font-family:Arial,sans-serif}
-body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,#35105c66,transparent 35%),radial-gradient(circle at 90% 80%,#6815a333,transparent 35%);pointer-events:none;z-index:-1}
-header{padding:20px 6%;background:#100d1bd9;border-bottom:1px solid #633a87;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
-header h2{margin:0;letter-spacing:2px}
-header span{color:#c084fc}
-nav{display:flex;gap:18px;align-items:center}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:
+ radial-gradient(ellipse at 15% 0%,#123b6540,transparent 35%),
+ radial-gradient(ellipse at 90% 70%,#552a9c24,transparent 35%),
+ var(--bg);
+ color:var(--text);font-family:Inter,Arial,sans-serif;
+ min-height:100vh;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;
+ opacity:.13;z-index:0;
+ background-image:
+ linear-gradient(#00d9ff12 1px,transparent 1px),
+ linear-gradient(90deg,#00d9ff12 1px,transparent 1px);
+ background-size:42px 42px;
+}
 a{color:inherit;text-decoration:none}
-.logout{padding:10px 15px;border:1px solid #9252c5;border-radius:10px}
-main{max-width:1100px;margin:35px auto;padding:0 18px}
-.welcome,.stat,.course,.reward,.progress,.extra{background:#171322;border:1px solid #39294e;border-radius:18px;padding:22px;box-shadow:0 10px 30px #0005}
-.welcome{background:linear-gradient(120deg,#39175b,#191326 75%);border-color:#9252c5;position:relative;overflow:hidden}
-.welcome:after{content:"✦";position:absolute;right:30px;top:10px;font-size:100px;color:#ffffff12}
-h1{color:#e9d5ff;margin-top:0;font-size:29px}
-.welcome p{color:#d3c3e8}
-.membership{display:inline-block;padding:8px 13px;border-radius:30px;background:#682ca0;color:#f3ddff;font-weight:bold}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:20px 0}
-.stat{transition:.25s}
-.stat:hover,.course:hover{transform:translateY(-4px);border-color:#b66aff}
-.stat small{color:#bba9d0}
-.stat strong{display:block;font-size:28px;margin-top:10px;color:#d8b4fe}
-.progress{margin:20px 0}
-.progress-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.bar{height:13px;background:#30253e;border-radius:20px;overflow:hidden;margin:14px 0 8px}
-.fill{height:100%;width:{{ xp_progress }}%;background:linear-gradient(90deg,#9333ea,#d8b4fe);border-radius:20px;transition:width .5s}
-.reward{margin:20px 0;background:linear-gradient(120deg,#28153c,#171322)}
-button{background:linear-gradient(100deg,#9333ea,#6b21a8);color:white;border:0;border-radius:11px;padding:13px 20px;font-weight:bold;font-size:15px;cursor:pointer}
-button:hover{filter:brightness(1.2)}
-button:disabled{background:#484052;color:#c5bdce;cursor:not-allowed}
-.courses{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:15px}
-.course{transition:.25s}
-.course h3{color:#d8b4fe}
-.course p{color:#b9b2c7;line-height:1.5}
-.course b{color:#c084fc}
-.message{background:#20152b;border:1px solid #7135a5;border-radius:10px;padding:12px;margin:15px 0}
-.section-title{margin-top:30px;color:#ead5ff}
-.extra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
-.extra h3{color:#d8b4fe;margin-top:0}
-.extra p{color:#b9b2c7;line-height:1.5}
-footer{text-align:center;color:#777;padding:35px}
-@media(max-width:600px){header{padding:17px}nav{font-size:13px;gap:12px}h1{font-size:23px}.welcome,.stat,.course,.reward,.progress{padding:18px}}
+header{
+ position:sticky;top:0;z-index:10;
+ display:flex;justify-content:space-between;align-items:center;
+ gap:15px;flex-wrap:wrap;padding:17px 5%;
+ background:#080e20eF;backdrop-filter:blur(18px);
+ border-bottom:1px solid #24436a;
+}
+.logo{
+ font-family:Orbitron,sans-serif;font-weight:900;
+ letter-spacing:2px;font-size:19px;
+}
+.logo span{color:var(--blue);text-shadow:0 0 18px #00d9ff80}
+.nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav a{
+ color:#b8c8e5;font-size:12px;padding:10px 13px;
+ border:1px solid transparent;border-radius:9px;
+ transition:.2s;
+}
+.nav a:hover{border-color:#28658b;color:var(--blue);background:#00d9ff0b}
+.nav .logout{border-color:#663b79;color:#d6baff}
+main{
+ position:relative;z-index:1;
+ max-width:1160px;margin:35px auto;padding:0 20px;
+}
+.eyebrow{
+ color:var(--blue);font:11px Orbitron,sans-serif;
+ letter-spacing:3px;margin-bottom:14px;
+}
+.hero{
+ position:relative;overflow:hidden;padding:35px;
+ border:1px solid #245b83;border-radius:22px;
+ background:linear-gradient(115deg,#102e4d,#11172f 58%,#241744);
+ box-shadow:0 20px 65px #0007,0 0 35px #00d9ff0c;
+}
+.hero:after{
+ content:"N";position:absolute;right:35px;top:-48px;
+ font:200px Orbitron,sans-serif;font-weight:900;
+ color:#ffffff08;pointer-events:none;
+}
+.hero h1{
+ position:relative;z-index:1;margin:0 0 13px;
+ font:clamp(25px,4vw,39px) Orbitron,sans-serif;
+ letter-spacing:-1px;
+}
+.hero h1 span{
+ color:var(--blue);text-shadow:0 0 24px #00d9ff60;
+}
+.hero p{color:#bdcce5;line-height:1.7;margin:0 0 18px;max-width:650px}
+.membership{
+ display:inline-block;padding:9px 14px;border-radius:30px;
+ border:1px solid #8b5cff88;background:#8b5cff20;
+ color:#d8c5ff;font-size:12px;font-weight:800;
+}
+.hero-status{
+ position:relative;z-index:1;margin-top:23px;
+ display:flex;align-items:center;gap:9px;
+ color:#9db5d5;font:10px Orbitron,sans-serif;letter-spacing:2px;
+}
+.pulse{
+ width:8px;height:8px;border-radius:50%;background:var(--blue);
+ box-shadow:0 0 15px var(--blue);animation:pulse 1.5s infinite;
+}
+@keyframes pulse{50%{opacity:.3;box-shadow:0 0 3px var(--blue)}}
+
+.message{
+ margin:18px 0;padding:13px 16px;border-radius:11px;
+ background:#15294a;border:1px solid #3274a2;color:#c9eaff;
+}
+.section-title{
+ margin:34px 0 15px;font:15px Orbitron,sans-serif;
+ letter-spacing:1px;color:#dceaff;
+}
+.section-title span{color:var(--blue)}
+.stats{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:14px;margin:19px 0;
+}
+.stat,.panel,.course,.extra{
+ background:linear-gradient(145deg,#111b32,#0c1326);
+ border:1px solid var(--border);border-radius:16px;
+ box-shadow:0 12px 30px #0003;
+}
+.stat{padding:20px;position:relative;overflow:hidden;transition:.25s}
+.stat:hover,.course:hover,.extra:hover{
+ transform:translateY(-4px);border-color:#00bfe9;
+ box-shadow:0 15px 35px #00d9ff12;
+}
+.stat small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px}
+.stat strong{
+ display:block;margin-top:13px;font:24px Orbitron,sans-serif;
+ color:var(--blue);overflow-wrap:anywhere;
+}
+.stat:nth-child(even) strong{color:#b69aff}
+.progress-panel{padding:23px;margin-top:18px}
+.panel{padding:23px}
+.progress-top{
+ display:flex;justify-content:space-between;gap:12px;
+ flex-wrap:wrap;font-size:13px;
+}
+.progress-top span{color:var(--blue);font-weight:800}
+.bar{
+ height:12px;background:#1a2945;border-radius:30px;
+ overflow:hidden;margin:17px 0 10px;
+}
+.fill{
+ height:100%;width:{{ xp_progress }}%;
+ background:linear-gradient(90deg,var(--blue),var(--purple));
+ border-radius:30px;box-shadow:0 0 18px #00d9ff80;
+ transition:width .6s;
+}
+.muted{color:var(--muted);font-size:12px;line-height:1.7}
+.reward{
+ margin-top:18px;padding:24px;
+ display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:20px;
+ background:linear-gradient(110deg,#122d4b,#171b3a);
+ border:1px solid #28618b;border-radius:17px;
+}
+.reward h2{font:16px Orbitron,sans-serif;margin:0 0 9px}
+.reward p{color:#aebed8;font-size:13px;margin:0}
+button{
+ border:0;border-radius:10px;padding:13px 18px;
+ color:#04101c;background:linear-gradient(100deg,var(--blue),#8c9cff);
+ font-weight:900;cursor:pointer;transition:.2s;
+}
+button:hover{filter:brightness(1.15);transform:translateY(-2px)}
+button:disabled{background:#34415b;color:#aab5c9;cursor:not-allowed;transform:none}
+.grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:14px;
+}
+.extra,.course{padding:21px;transition:.25s}
+.extra h3,.course h3{margin:10px 0;color:#e5edff;font-size:15px}
+.extra p,.course p{color:#9eacc8;font-size:12px;line-height:1.7}
+.extra b,.course b{color:var(--blue);font-size:11px;letter-spacing:.5px}
+.extra .symbol{font-size:30px}
+.course{display:block}
+.course h3{color:#c8b7ff}
+.course:hover h3{color:var(--blue)}
+.course-icon{
+ width:42px;height:42px;display:grid;place-items:center;
+ border:1px solid #3c5e8d;border-radius:12px;
+ background:#132747;font-size:21px;
+}
+.tag{
+ display:inline-block;margin-top:9px;padding:6px 9px;
+ border-radius:20px;background:#00d9ff12;
+ color:var(--blue);font-size:9px;letter-spacing:1px;
+}
+footer{
+ position:relative;z-index:1;text-align:center;
+ color:#63718e;padding:35px 15px;font-size:11px;letter-spacing:1px;
+}
+@media(max-width:850px){
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+ header{padding:15px 17px}
+ .logo{font-size:16px}
+ .nav{gap:3px}
+ .nav a{font-size:11px;padding:8px}
+ main{margin:22px auto;padding:0 13px}
+ .hero{padding:25px 20px}
+ .hero:after{font-size:130px;right:5px}
+ .hero h1{font-size:25px}
+ .stats{gap:9px}
+ .stat{padding:15px}
+ .stat strong{font-size:20px}
+ .panel{padding:18px}
+ .grid{grid-template-columns:1fr}
+ .reward{padding:19px}
+}
 </style>
 </head>
+
 <body>
 <header>
-<h2>DEADY <span>ACADEMY</span></h2>
-<nav>
-<a href="/profile">👤 Profilim</a>
-<a class="logout" href="/logout">Çıkış Yap</a>
-</nav>
+ <div class="logo">DEADY <span>NEXUS</span></div>
+ <nav class="nav">
+  <a href="#overview">⌂ Panel</a>
+  <a href="#courses">▣ Eğitimler</a>
+  <a href="/#packages">♛ Üyeliklerim</a>
+  <a href="#announcements">▤ Duyurular</a>
+  <a href="/messages">✉ Mesajlar{% if unread_messages %} ({{ unread_messages }}){% endif %}</a>
+  <a href="https://t.me/dertvar" target="_blank" rel="noopener">✉ Destek</a>
+  <a href="/profile">◉ Profilim</a>
+  <a class="logout" href="/logout">Çıkış Yap ↗</a>
+ </nav>
 </header>
 
-<main>
-<section class="welcome">
-<h1>HOŞ GELDİN, {{ username }}! 👋</h1>
-<p>Bugün de kendini geliştir. Hedeflerine bir adım daha yaklaş.</p>
-<p>Üyelik: <span class="membership">{{ membership }}</span></p>
+<main id="overview">
+
+<section class="hero">
+ <div class="eyebrow">✦ STUDENT COMMAND CENTER · 2026</div>
+ <h1>WELCOME BACK,<br><span>{{ username }}.</span></h1>
+ <p>
+  Öğrenmeye devam et. Yeni beceriler kazan.
+  Kendi geleceğini kodlayarak bir sonraki seviyeye ulaş.
+ </p>
+ <span class="membership">✦ {{ membership }} ÜYELİĞİ</span>
+ <div class="hero-status"><span class="pulse"></span>SYSTEM ONLINE · YOUR JOURNEY CONTINUES</div>
 </section>
 
 {% with messages = get_flashed_messages() %}
@@ -71,117 +248,183 @@ footer{text-align:center;color:#777;padding:35px}
 {% endfor %}
 {% endwith %}
 
+<h2 class="section-title"><span>01 /</span> YOUR STATISTICS</h2>
 <section class="stats">
-<div class="stat"><small>🪙 DEADY COINS</small><strong>{{ coins }}</strong></div>
-<div class="stat"><small>⭐ SEVİYE</small><strong>{{ level }}</strong></div>
-<div class="stat"><small>⚡ TOPLAM XP</small><strong>{{ xp }}</strong></div>
-<div class="stat"><small>👑 ÜYELİK</small><strong style="font-size:20px">{{ membership }}</strong></div>
+ <div class="stat">
+  <small>◈ DEADY COINS</small>
+  <strong>{{ coins }}</strong>
+ </div>
+ <div class="stat">
+  <small>✧ CURRENT LEVEL</small>
+  <strong>{{ level }}</strong>
+ </div>
+ <div class="stat">
+  <small>⚡ TOTAL EXPERIENCE</small>
+  <strong>{{ xp }} XP</strong>
+ </div>
+ <div class="stat">
+  <small>♛ MEMBERSHIP</small>
+  <strong style="font-size:17px">{{ membership }}</strong>
+ </div>
 </section>
 
-<section class="progress">
-<div class="progress-top">
-<strong>⚡ SEVİYE İLERLEMEN</strong>
-<span>{{ xp_progress }}/100 XP</span>
-</div>
-<div class="bar"><div class="fill"></div></div>
-<small style="color:#bba9d0">Sonraki seviyeye {{ xp_to_next }} XP kaldı.</small>
+<section class="panel progress-panel">
+ <div class="progress-top">
+  <strong>⚡ LEVEL PROGRESSION</strong>
+  <span>{{ xp_progress }}/100 XP</span>
+ </div>
+ <div class="bar"><div class="fill"></div></div>
+ <div class="muted">Bir sonraki seviyeye ulaşmak için {{ xp_to_next }} XP daha kazan.</div>
 </section>
 
 <section class="reward">
-<h2>🎁 Günlük Ödül</h2>
-<p>Her gün giriş yap, 10 coin ve 25 XP kazan.</p>
-<form method="POST" action="/daily-reward">
-<button type="submit" {% if daily_claimed %}disabled{% endif %}>
-{% if daily_claimed %}Bugünkü ödül alındı ✓{% else %}Günlük ödülümü al{% endif %}
-</button>
-</form>
+ <div>
+  <h2>🎁 DAILY REWARD PROTOCOL</h2>
+  <p>Her gün giriş yap. 10 coin ve 25 XP kazan.</p>
+ </div>
+ <form method="POST" action="/daily-reward">
+  <button type="submit" {% if daily_claimed %}disabled{% endif %}>
+   {% if daily_claimed %}ÖDÜL ALINDI ✓{% else %}ÖDÜLÜMÜ AL →{% endif %}
+  </button>
+ </form>
 </section>
 
-<h2 class="section-title">🎯 DEADY GÜNLÜK GÖREVLER</h2>
-<section class="extra-grid">
-    <div class="extra">
-        <div style="font-size:38px;margin-bottom:12px;">⚡</div>
-        <h3>Günlük Giriş</h3>
-        <p>Her gün panele giriş yap ve günlük ödülünü al.</p>
-        <b style="color:#c084fc;">ÖDÜL: 25 XP + 10 COIN</b>
-        <p style="color:#ff3030;font-weight:bold;">
-            {% if daily_claimed %}✓ TAMAMLANDI{% else %}◉ BEKLİYOR{% endif %}
-        </p>
-    </div>
-    <div class="extra">
-        <div style="font-size:38px;margin-bottom:12px;">🐍</div>
-        <h3>Python Yolculuğu</h3>
-        <p>Python eğitimine başla ve yeni bilgiler öğren.</p>
-        <a href="/course/python" style="color:#c084fc;font-weight:bold;text-decoration:none;">
-            EĞİTİME BAŞLA →
-        </a>
-    </div>
-    <div class="extra">
-        <div style="font-size:38px;margin-bottom:12px;">🏆</div>
-        <h3>Haftalık Hedef</h3>
-        <p>Hafta boyunca eğitimlerini tamamlayarak kendini geliştir.</p>
-        <b style="color:#c084fc;">YAKINDA</b>
-    </div>
+<h2 class="section-title"><span>02 /</span> DAILY MISSIONS</h2>
+<section class="grid">
+ <div class="extra">
+  <div class="symbol">⚡</div>
+  <h3>Daily Login</h3>
+  <p>Her gün panele giriş yap ve ödülünü al.</p>
+  <b>25 XP + 10 COIN</b>
+  <p>{% if daily_claimed %}✓ TAMAMLANDI{% else %}◉ BEKLİYOR{% endif %}</p>
+ </div>
+ <div class="extra">
+  <div class="symbol">⌘</div>
+  <h3>Python Journey</h3>
+  <p>Python eğitimine başla ve programlama becerilerini geliştir.</p>
+  <a href="/course/python"><b>EĞİTİME BAŞLA →</b></a>
+ </div>
+ <div class="extra">
+  <div class="symbol">♛</div>
+  <h3>Weekly Challenge</h3>
+  <p>Hafta boyunca eğitimlerini tamamlayarak kendini geliştir.</p>
+  <b>YAKINDA</b>
+ </div>
 </section>
 
-<h2 class="section-title">🏅 ROZETLERİM</h2>
-<section class="extra-grid">
-{% for badge in earned_badges %}
-    <div class="extra">
-        <div style="font-size:38px;margin-bottom:12px;">{{ badge.icon }}</div>
-        <h3>{{ badge.name }}</h3>
-        <p>{{ badge.description }}</p>
-        <b style="color:#ff3030;">✓ KAZANILDI</b>
-    </div>
-{% else %}
-    <div class="extra">
-        <h3>🔒 İlk rozetini bekliyoruz</h3>
-        <p>XP kazan, eğitimleri tamamla ve rozetlerini burada sergile.</p>
-    </div>
-{% endfor %}
+<h2 class="section-title"><span>03 /</span> ACHIEVEMENT COLLECTION</h2>
+<section class="grid">
+ {% for badge in earned_badges %}
+ <div class="extra">
+  <div class="symbol">{{ badge.icon }}</div>
+  <h3>{{ badge.name }}</h3>
+  <p>{{ badge.description }}</p>
+  <b>✓ UNLOCKED</b>
+ </div>
+ {% else %}
+ <div class="extra">
+  <div class="symbol">🔒</div>
+  <h3>İlk rozetini bekliyoruz</h3>
+  <p>XP kazan, eğitimleri tamamla ve başarılarını burada sergile.</p>
+ </div>
+ {% endfor %}
 </section>
 
-<h2 class="section-title">📚 EĞİTİMLERİN</h2>
-<section class="courses">
-<a href="/html-baslangic" class="course">
-<h3>🌐 HTML Başlangıç</h3>
-<p>Sıfırdan ilk web sayfanı oluştur.</p>
-<b>İlk derse başla →</b>
-</a>
-<a href="/course/python" class="course">
-<h3>🐍 Python</h3>
-<p>Değişkenler, döngüler ve fonksiyonlar.</p>
-<b>Eğitime başla →</b>
-</a>
-<a href="/python-final" class="course">
-<h3>🏆 Python Final Sınavı</h3>
-<p>30 soruluk sınavda bilgini test et.</p>
-<b>Sınava gir →</b>
-</a>
-<a href="/course/web" class="course">
-<h3>💻 Web Tasarım</h3>
-<p>HTML, CSS ve JavaScript öğren.</p>
-<b>Eğitime başla →</b>
-</a>
+<h2 class="section-title" id="courses"><span>04 /</span> LEARNING DATABASE</h2>
+<section class="grid">
+ <a href="/html-baslangic" class="course">
+  <div class="course-icon">🌐</div>
+  <h3>HTML FOUNDATION</h3>
+  <p>Sıfırdan ilk web sayfanı oluştur ve HTML dünyasını keşfet.</p>
+  <span class="tag">WEB DEVELOPMENT</span>
+  <p><b>İLK DERSE BAŞLA →</b></p>
+ </a>
+ <a href="/course/python" class="course">
+  <div class="course-icon">🐍</div>
+  <h3>PYTHON PROGRAMMING</h3>
+  <p>Değişkenler, döngüler ve fonksiyonlarla kodlamayı öğren.</p>
+  <span class="tag">PROGRAMMING</span>
+  <p><b>EĞİTİME BAŞLA →</b></p>
+ </a>
+ <a href="/python-final" class="course">
+  <div class="course-icon">🏆</div>
+  <h3>PYTHON FINAL EXAM</h3>
+  <p>30 soruluk sınavda bilgini test et ve kendini kanıtla.</p>
+  <span class="tag">EXAM CENTER</span>
+  <p><b>SINAVA GİR →</b></p>
+ </a>
+ <a href="/javascript-final" class="course">
+  <div class="course-icon">⚡</div>
+  <h3>JAVASCRIPT FINAL EXAM</h3>
+  <p>30 soruluk JavaScript sınavında bilgini test et ve kendini kanıtla.</p>
+  <span class="tag">EXAM CENTER</span>
+  <p><b>SINAVA GİR →</b></p>
+ </a>
+ <a href="/course/web" class="course">
+  <div class="course-icon">💻</div>
+  <h3>WEB DESIGN</h3>
+  <p>HTML, CSS ve JavaScript ile modern web projeleri geliştir.</p>
+  <span class="tag">WEB TECHNOLOGY</span>
+  <p><b>EĞİTİME BAŞLA →</b></p>
+ </a>
 </section>
 
-<h2 class="section-title">✨ DEADY AVANTAJLARI</h2>
-<section class="extra-grid">
-<div class="extra">
-<h3>🏅 Rozet Sistemi</h3>
-<p>Görevleri tamamla, başarılarını göster ve yeni rozetler kazan.</p>
-</div>
-<div class="extra">
-<h3>🎯 Günlük Görevler</h3>
-<p>Her gün yeni hedefler belirle, XP ve coin kazanmaya devam et.</p>
-</div>
-<div class="extra">
-<h3>👑 Premium Dünya</h3>
-<p>Gelişimini takip et ve DEADY topluluğunda yüksel.</p>
-</div>
+
+<h2 class="section-title" id="announcements"><span>06 /</span> ACADEMY ANNOUNCEMENTS</h2>
+<section class="grid">
+ {% if announcements %}
+ {% for announcement in announcements %}
+ <div class="extra">
+  <div class="symbol">📢</div>
+  <h3>{{ announcement["title"] }}</h3>
+  <p>{{ announcement["content"] }}</p>
+  <small>{{ announcement["created_at"] }}</small>
+  <b>SYSTEM NOTICE</b>
+ </div>
+ {% endfor %}
+ {% else %}
+ <div class="extra">
+  <div class="symbol">📢</div>
+  <h3>DEADY ACADEMY</h3>
+  <p>Henüz yayınlanmış bir duyuru bulunmuyor.</p>
+  <b>SYSTEM NOTICE</b>
+ </div>
+ {% endif %}
+ <div class="extra">
+  <div class="symbol">♛</div>
+  <h3>ÜYELİK MERKEZİ</h3>
+  <p>Mevcut üyelik seviyeni görüntüle ve diğer paketleri incele.</p>
+  <a href="/#packages"><b>PAKETLERİ İNCELE →</b></a>
+ </div>
+ <div class="extra">
+  <div class="symbol">✉</div>
+  <h3>DESTEK MERKEZİ</h3>
+  <p>Üyelik, ödeme veya eğitimlerle ilgili yardım almak için Telegram üzerinden bize ulaş.</p>
+  <a href="https://t.me/dertvar" target="_blank" rel="noopener"><b>TELEGRAM'DA İLETİŞİME GEÇ →</b></a>
+ </div>
 </section>
+
+<h2 class="section-title"><span>05 /</span> NEXUS FEATURES</h2>
+<section class="grid">
+ <div class="extra">
+  <div class="symbol">🏅</div>
+  <h3>Achievement System</h3>
+  <p>Görevleri tamamla, başarılarını göster ve yeni rozetler kazan.</p>
+ </div>
+ <div class="extra">
+  <div class="symbol">🎯</div>
+  <h3>Daily Missions</h3>
+  <p>Her gün yeni hedefler belirle ve XP ile coin kazanmaya devam et.</p>
+ </div>
+ <div class="extra">
+  <div class="symbol">🚀</div>
+  <h3>Future Learning</h3>
+  <p>Yazılım becerilerini geliştir ve kendi dijital geleceğini oluştur.</p>
+ </div>
+</section>
+
 </main>
 
-<footer>DEADY ACADEMY © 2026 | CODE YOUR FUTURE.</footer>
+<footer>DEADY NEXUS © 2026 · CODE YOUR FUTURE · SYSTEM ONLINE</footer>
 </body>
 </html>

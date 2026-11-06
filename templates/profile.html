@@ -3,35 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090611">
 <title>DEADY | Profilim</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#08070e;color:white;font-family:Arial}
-header{padding:20px;background:#11101b;border-bottom:1px solid #9333ea;display:flex;justify-content:space-between}
+body{margin:0;background:#090611;color:#fff;font-family:Arial,sans-serif}
+header{padding:19px 6%;background:#100c1b;border-bottom:1px solid #7734aa;display:flex;justify-content:space-between;align-items:center}
 a{color:#d8b4fe;text-decoration:none}
-main{max-width:750px;margin:35px auto;padding:15px}
-.profile{text-align:center;background:linear-gradient(140deg,#32134c,#151321);padding:30px;border:1px solid #9333ea;border-radius:20px}
-.avatar{width:110px;height:110px;border-radius:50%;background:#9333ea;object-fit:cover;display:block;margin:auto;border:3px solid #d8b4fe}
-.initial{display:grid;place-items:center;font-size:38px;font-weight:bold}
-h1{color:#e9d5ff}
-.id{background:#0c0b13;border:1px solid #9333ea;padding:12px;border-radius:10px;display:inline-block;color:#d8b4fe}
-.upload{margin:22px auto 0;padding:18px;background:#151321;border:1px solid #7135a5;border-radius:14px;max-width:400px}
+a:hover{color:#fff}
+main{max-width:950px;margin:30px auto;padding:16px}
+.profile{position:relative;text-align:center;background:linear-gradient(145deg,#32134c,#171020 65%,#100c18);padding:32px 20px;border:1px solid #9333ea;border-radius:22px;box-shadow:0 10px 40px #0008}
+.avatar{width:112px;height:112px;border-radius:50%;background:#9333ea;object-fit:cover;display:block;margin:auto;border:3px solid #d8b4fe;box-shadow:0 0 25px #9333ea66}
+.initial{display:grid;place-items:center;font-size:40px;font-weight:bold}
+h1{color:#f3e8ff;margin-bottom:8px}
+.id{background:#0c0b13;border:1px solid #9333ea;padding:10px 15px;border-radius:10px;display:inline-block;color:#d8b4fe;font-size:13px}
+.upload{margin:22px auto 0;padding:18px;background:#151321;border:1px solid #7135a5;border-radius:14px;max-width:420px}
 input{width:100%;margin:12px 0;color:white}
 button{background:#9333ea;color:white;border:0;padding:13px 20px;border-radius:9px;font-weight:bold;cursor:pointer}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-.stat,.history{background:#151321;padding:18px;border:1px solid #38264f;border-radius:13px}
-.stat strong{display:block;color:#d8b4fe;font-size:24px;margin-top:8px}
-.history{margin-top:20px}
-.item{padding:12px 0;border-bottom:1px solid #30263c}
+button:hover{background:#a855f7}
+.section{margin-top:24px}
+.section h2{font-size:19px;color:#e9d5ff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.stat,.panel{background:#151321;padding:19px;border:1px solid #38264f;border-radius:15px}
+.stat strong{display:block;color:#d8b4fe;font-size:27px;margin-top:9px}
+.progress-bg{height:13px;background:#30243e;border-radius:20px;overflow:hidden;margin:13px 0}
+.progress{height:100%;background:linear-gradient(90deg,#7e22ce,#d946ef);border-radius:20px}
+.muted{color:#a99bb8;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.exam{background:#151321;border:1px solid #49305f;border-radius:15px;padding:18px}
+.exam strong{color:#d8b4fe;font-size:18px}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.badge{background:#171322;border:1px solid #6b3990;border-radius:13px;padding:17px;text-align:center}
+.badge-icon{font-size:30px}
+.item{padding:13px 0;border-bottom:1px solid #30263c}
 .plus{color:#4ade80}.minus{color:#fb7185}
 .message{background:#21152e;padding:12px;border:1px solid #9333ea;border-radius:10px;margin:12px 0}
-@media(max-width:450px){.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:550px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.badges{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <header>
-<strong>DEADY <span style="color:#c084fc">ACADEMY</span></strong>
-<a href="/dashboard">Panele dön</a>
+<strong>DEADY <span style="color:#c084fc">SALVO</span></strong>
+<a href="/dashboard">← Panele dön</a>
 </header>
 <main>
 
@@ -56,18 +69,74 @@ button{background:#9333ea;color:white;border:0;padding:13px 20px;border-radius:9
 <h3>📸 PROFİL FOTOĞRAFINI DEĞİŞTİR</h3>
 <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required>
 <button type="submit">FOTOĞRAFI YÜKLE</button>
-<p><small>JPG, PNG veya WebP · Maksimum 3 MB</small></p>
+<p class="muted">JPG, PNG veya WebP · Maksimum 3 MB</p>
 </form>
 </section>
 
-<section class="stats">
+<section class="section">
+<h2>⚡ SEVİYE İLERLEMEN</h2>
+<div class="panel">
+<strong>LEVEL {{ user.level }}</strong>
+<div class="progress-bg">
+<div class="progress" style="width:{{ xp_progress }}%"></div>
+</div>
+<p class="muted">{{ user.xp }} toplam XP · Sonraki seviyeye {{ xp_to_next }} XP kaldı</p>
+</div>
+</section>
+
+<section class="section">
+<h2>📊 HESAP İSTATİSTİKLERİ</h2>
+<div class="stats">
 <div class="stat">🪙 COINS<strong>{{ user.coins }}</strong></div>
 <div class="stat">⭐ LEVEL<strong>{{ user.level }}</strong></div>
 <div class="stat">⚡ XP<strong>{{ user.xp }}</strong></div>
+</div>
 </section>
 
-<section class="history">
+<section class="section">
+<h2>🏆 FİNAL SINAVI BAŞARILARI</h2>
+<div class="grid">
+<div class="exam">
+<strong>🐍 PYTHON FINAL</strong>
+{% if python_exam %}
+<p> <b>{{ python_exam.score }}/100</b> puan</p>
+<p>{{ python_exam.correct_answers }}/30 doğru cevap</p>
+<p class="muted">Sınav tamamlandı ✓</p>
+{% else %}
+<p class="muted">Henüz tamamlanmadı.</p>
+{% endif %}
+</div>
+<div class="exam">
+<strong>⚡ JAVASCRIPT FINAL</strong>
+{% if javascript_exam %}
+<p><b>{{ javascript_exam.score }}/100</b> puan</p>
+<p>{{ javascript_exam.correct_answers }}/30 doğru cevap</p>
+<p class="muted">Sınav tamamlandı ✓</p>
+{% else %}
+<p class="muted">Henüz tamamlanmadı.</p>
+{% endif %}
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2>🎖️ KAZANILAN ROZETLER</h2>
+<div class="badges">
+{% for badge in badges %}
+<div class="badge">
+<div class="badge-icon">{{ badge.icon }}</div>
+<strong>{{ badge.name }}</strong>
+<p class="muted">{{ badge.description }}</p>
+</div>
+{% else %}
+<div class="panel">Henüz rozet kazanmadın. Eğitimlere devam et!</div>
+{% endfor %}
+</div>
+</section>
+
+<section class="section">
 <h2>🪙 COIN GEÇMİŞİ</h2>
+<div class="panel">
 {% if transactions %}
 {% for item in transactions %}
 <div class="item">
@@ -75,12 +144,13 @@ button{background:#9333ea;color:white;border:0;padding:13px 20px;border-radius:9
 {% if item.amount > 0 %}+{% endif %}{{ item.amount }} COINS
 </strong>
 <p>{{ item.reason }}</p>
-<small>{{ item.created_at }}</small>
+<small class="muted">{{ item.created_at }}</small>
 </div>
 {% endfor %}
 {% else %}
 <p>Henüz coin işlemin bulunmuyor.</p>
 {% endif %}
+</div>
 </section>
 
 <p><a href="/dashboard">← Öğrenci paneline dön</a></p>
