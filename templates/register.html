@@ -240,6 +240,7 @@ input::placeholder{color:#716979}
  {% endwith %}
 
  <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <input type="hidden" name="membership" value="{{ selected_package|default('BAŞLANGIÇ') }}">
 
   <div class="field">

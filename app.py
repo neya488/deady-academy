@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import sqlite3
@@ -7,6 +8,7 @@ import re
 import os
 import secrets
 import hashlib
+import time
 import smtplib
 import ssl
 from email.message import EmailMessage
@@ -22,6 +24,35 @@ from javascript_final_data import JAVASCRIPT_FINAL
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "local-development-key")
 app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 * 1024
+app.config["WTF_CSRF_ENABLED"] = True
+app.config["WTF_CSRF_TIME_LIMIT"] = 3600
+
+csrf = CSRFProtect(app)
+
+
+# DEADY NEXUS - Oturum güvenliği
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.environ.get("RENDER", "").lower() == "true",
+)
+
+# DEADY NEXUS - HTTP güvenlik başlıkları
+@app.after_request
+def add_security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = (
+        "camera=(), microphone=(), geolocation=()"
+    )
+
+    if os.environ.get("RENDER", "").lower() == "true":
+        response.headers["Strict-Transport-Security"] = (
+            "max-age=31536000"
+        )
+
+    return response
 
 DB_NAME = "academy.db"
 
@@ -73,10 +104,50 @@ def send_reset_email(recipient, reset_url):
         smtp.send_message(message)
 
 
+
+def send_verification_email(recipient, code):
+    sender = os.environ.get("MAIL_USERNAME")
+    password = os.environ.get("MAIL_APP_PASSWORD")
+
+    if not sender or not password:
+        raise RuntimeError("Gmail ortam değişkenleri ayarlanmamış.")
+
+    message = EmailMessage()
+    message["Subject"] = "DEADY NEXUS - E-posta Doğrulama"
+    message["From"] = sender
+    message["To"] = recipient
+    message.set_content(
+        "DEADY NEXUS'a hoş geldin!\\n\\n"
+        "E-posta doğrulama kodun: " + code + "\\n\\n"
+        "Bu kod 5 dakika geçerlidir.\\n"
+        "Kodu kimseyle paylaşma."
+    )
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(
+        "smtp.gmail.com", 465, context=context, timeout=20
+    ) as smtp:
+        smtp.login(sender, password)
+        smtp.send_message(message)
+
+
 def init_db():
     if os.environ.get("DATABASE_URL"):
         db = get_db()
         try:
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS pending_email_verifications (
+                    email TEXT PRIMARY KEY,
+                    username TEXT NOT NULL UNIQUE,
+                    password_hash TEXT NOT NULL,
+                    pending_membership TEXT,
+                    code_hash TEXT NOT NULL,
+                    expires_at BIGINT NOT NULL,
+                    attempts INTEGER NOT NULL DEFAULT 0,
+                    last_sent_at BIGINT NOT NULL
+                )
+            """)
+
             tables = [
                 "deady_users", "users", "badges",
                 "python_final_completions",
@@ -94,6 +165,19 @@ def init_db():
         return
 
     db = get_db()
+
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS pending_email_verifications (
+            email TEXT PRIMARY KEY,
+            username TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            pending_membership TEXT,
+            code_hash TEXT NOT NULL,
+            expires_at INTEGER NOT NULL,
+            attempts INTEGER NOT NULL DEFAULT 0,
+            last_sent_at INTEGER NOT NULL
+        )
+    """)
 
     db.execute("""
         CREATE TABLE IF NOT EXISTS deady_users (
@@ -594,6 +678,7 @@ def home():
     return render_template("index.html")
 
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -603,6 +688,7 @@ def register():
         selected = request.form.get("membership", "BAŞLANGIÇ").strip().upper()
 
         allowed_packages = {"BAŞLANGIÇ", "GÜMÜŞ", "ALTIN", "ELMAS", "EFSANE"}
+
         if selected not in allowed_packages:
             flash("Geçersiz üyelik paketi.")
             return redirect("/register")
@@ -621,32 +707,81 @@ def register():
 
         db = get_db()
         try:
+            existing = db.execute(
+                "SELECT id FROM deady_users WHERE username = ? OR email = ?",
+                (username, email)
+            ).fetchone()
+
+            if existing:
+                flash("Bu kullanıcı adı veya e-posta zaten kullanılıyor.")
+                return redirect("/register")
+
+            pending = db.execute(
+                "SELECT email, username, last_sent_at FROM pending_email_verifications WHERE email = ? OR username = ?",
+                (email, username)
+            ).fetchone()
+
+            now = int(time.time())
+
+            if pending:
+                same_account = (
+                    pending["email"].lower() == email
+                    and pending["username"].lower() == username.lower()
+                )
+
+                if not same_account:
+                    flash("Bu kullanıcı adı veya e-posta başka bir bekleyen kayıtta kullanılıyor.")
+                    return redirect("/register")
+
+                if now - int(pending["last_sent_at"]) < 60:
+                    session["pending_verification_email"] = email
+                    flash("Doğrulama kodu zaten gönderildi. E-postanı kontrol et.")
+                    return redirect("/verify-email")
+
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+
+            code = f"{secrets.randbelow(1000000):06d}"
+            code_hash = hashlib.sha256(
+                (app.secret_key + code).encode()
+            ).hexdigest()
+
             db.execute(
-                "INSERT INTO deady_users (username, email, password_hash, pending_membership) VALUES (?, ?, ?, ?)",
+                """INSERT INTO pending_email_verifications
+                (email, username, password_hash, pending_membership,
+                 code_hash, expires_at, attempts, last_sent_at)
+                VALUES (?, ?, ?, ?, ?, ?, 0, ?)""",
                 (
-                    username,
                     email,
+                    username,
                     generate_password_hash(password),
-                    None if selected == "BAŞLANGIÇ" else selected
+                    None if selected == "BAŞLANGIÇ" else selected,
+                    code_hash,
+                    now + 300,
+                    now
                 )
             )
             db.commit()
 
-            user = db.execute(
-                "SELECT id, username FROM deady_users WHERE username = ?",
-                (username,)
-            ).fetchone()
+            try:
+                send_verification_email(email, code)
+            except Exception:
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+                db.commit()
+                flash("E-posta gönderilemedi. E-posta ayarlarını kontrol et.")
+                return redirect("/register")
 
-            award_eligible_badges(db, user["id"])
-            db.commit()
-
-            session.clear()
-            session["user_id"] = user["id"]
-            session["username"] = user["username"]
-            flash("Hesabın başarıyla oluşturuldu!")
-            return redirect("/dashboard")
+            session["pending_verification_email"] = email
+            flash("6 haneli doğrulama kodu e-posta adresine gönderildi.")
+            return redirect("/verify-email")
 
         except sqlite3.IntegrityError:
+            db.rollback()
             flash("Bu kullanıcı adı veya e-posta zaten kullanılıyor.")
             return redirect("/register")
         finally:
@@ -658,6 +793,160 @@ def register():
         selected = "BAŞLANGIÇ"
 
     return render_template("register.html", selected_package=selected)
+
+
+@app.route("/verify-email", methods=["GET", "POST"])
+def verify_email():
+    email = session.get("pending_verification_email")
+
+    if not email:
+        flash("Önce kayıt işlemini başlatmalısın.")
+        return redirect("/register")
+
+    db = get_db()
+
+    try:
+        pending = db.execute(
+            "SELECT * FROM pending_email_verifications WHERE email = ?",
+            (email,)
+        ).fetchone()
+
+        if not pending:
+            session.pop("pending_verification_email", None)
+            flash("Bekleyen doğrulama kaydı bulunamadı. Yeniden kayıt ol.")
+            return redirect("/register")
+
+        now = int(time.time())
+
+        if request.method == "POST":
+            action = request.form.get("action", "verify")
+
+            if action == "resend":
+                if now - int(pending["last_sent_at"]) < 60:
+                    flash("Yeni kod istemeden önce 60 saniye beklemelisin.")
+                    return redirect("/verify-email")
+
+                code = f"{secrets.randbelow(1000000):06d}"
+                code_hash = hashlib.sha256(
+                    (app.secret_key + code).encode()
+                ).hexdigest()
+
+                try:
+                    send_verification_email(email, code)
+                except Exception:
+                    flash("E-posta gönderilemedi. Biraz sonra tekrar dene.")
+                    return redirect("/verify-email")
+
+                db.execute(
+                    """UPDATE pending_email_verifications
+                    SET code_hash = ?, expires_at = ?, attempts = 0, last_sent_at = ?
+                    WHERE email = ?""",
+                    (code_hash, now + 300, now, email)
+                )
+                db.commit()
+                flash("Yeni doğrulama kodu gönderildi. Kod 5 dakika geçerlidir.")
+                return redirect("/verify-email")
+
+            if now > int(pending["expires_at"]):
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+                db.commit()
+                session.pop("pending_verification_email", None)
+                flash("Kodun süresi doldu. Lütfen yeniden kayıt ol.")
+                return redirect("/register")
+
+            if int(pending["attempts"]) >= 5:
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+                db.commit()
+                session.pop("pending_verification_email", None)
+                flash("Çok fazla hatalı deneme yaptın. Yeniden kayıt ol.")
+                return redirect("/register")
+
+            submitted_code = request.form.get("code", "").strip()
+
+            if not re.fullmatch(r"\d{6}", submitted_code):
+                flash("6 haneli doğrulama kodunu gir.")
+                return redirect("/verify-email")
+
+            submitted_hash = hashlib.sha256(
+                (app.secret_key + submitted_code).encode()
+            ).hexdigest()
+
+            if not secrets.compare_digest(submitted_hash, pending["code_hash"]):
+                attempts = int(pending["attempts"]) + 1
+
+                if attempts >= 5:
+                    db.execute(
+                        "DELETE FROM pending_email_verifications WHERE email = ?",
+                        (email,)
+                    )
+                    db.commit()
+                    session.pop("pending_verification_email", None)
+                    flash("5 hatalı deneme yaptın. Yeniden kayıt ol.")
+                    return redirect("/register")
+
+                db.execute(
+                    "UPDATE pending_email_verifications SET attempts = ? WHERE email = ?",
+                    (attempts, email)
+                )
+                db.commit()
+                flash(f"Doğrulama kodu hatalı. Kalan deneme hakkı: {5 - attempts}")
+                return redirect("/verify-email")
+
+            try:
+                db.execute(
+                    """INSERT INTO deady_users
+                    (username, email, password_hash, pending_membership)
+                    VALUES (?, ?, ?, ?)""",
+                    (
+                        pending["username"],
+                        pending["email"],
+                        pending["password_hash"],
+                        pending["pending_membership"]
+                    )
+                )
+                db.commit()
+
+                user = db.execute(
+                    "SELECT id, username FROM deady_users WHERE username = ?",
+                    (pending["username"],)
+                ).fetchone()
+
+                award_eligible_badges(db, user["id"])
+
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+                db.commit()
+
+                session.clear()
+                session["user_id"] = user["id"]
+                session["username"] = user["username"]
+
+                flash("E-posta doğrulandı. Hesabın başarıyla oluşturuldu!")
+                return redirect("/dashboard")
+
+            except sqlite3.IntegrityError:
+                db.rollback()
+                db.execute(
+                    "DELETE FROM pending_email_verifications WHERE email = ?",
+                    (email,)
+                )
+                db.commit()
+                session.pop("pending_verification_email", None)
+                flash("Bu kullanıcı adı veya e-posta zaten kullanılıyor.")
+                return redirect("/register")
+
+        return render_template("verify_email.html", email=email)
+
+    finally:
+        db.close()
 
 
 @app.route("/login", methods=["GET", "POST"])
