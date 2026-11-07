@@ -9,6 +9,7 @@ import os
 import json
 import urllib.request
 import urllib.parse
+import urllib.error
 import secrets
 import hashlib
 import smtplib
@@ -124,6 +125,9 @@ def verify_security():
             session["security_verified"] = True
             return redirect(url_for("home"))
 
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        app.logger.error("Cloudflare HTTP hatası: %s - %s", e.code, body)
     except Exception:
         app.logger.exception("Cloudflare doğrulama hatası")
 
