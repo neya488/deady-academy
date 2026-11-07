@@ -1,4 +1,5 @@
 import os
+import ssl
 import re
 import sqlite3
 from urllib.parse import urlparse, unquote
@@ -77,7 +78,7 @@ class PGConnection:
             database=url.path.lstrip("/"),
             user=unquote(url.username),
             password=unquote(url.password or ""),
-            ssl_context=True,
+            ssl_context=ssl.create_default_context(),
             timeout=20,
         )
         self.lock_next_user_select = False

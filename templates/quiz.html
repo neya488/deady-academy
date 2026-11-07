@@ -45,6 +45,7 @@ a { color:#c084fc; }
 <p>Her doğru cevap 10 puan kazandırır.</p>
 
 <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 {% for question in questions %}
 <div class="question">
 <h3>{{ loop.index }}. {{ question.question }}</h3>

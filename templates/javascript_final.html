@@ -65,6 +65,7 @@ body{margin:0;background:#08070e;color:#f5f3ff;font-family:Arial,sans-serif}
 {% endif %}
 
 <form method="POST">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 {% for question in questions %}
 {% set qindex = loop.index0 %}
 <div class="final-question">

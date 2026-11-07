@@ -288,6 +288,7 @@ button:hover{filter:brightness(1.2);transform:translateY(-1px)}
 
  {% if not is_admin or selected_id %}
  <form method="POST" class="composer">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   {% if is_admin %}
   <input type="hidden" name="receiver_id" value="{{ selected_id }}">
   {% endif %}

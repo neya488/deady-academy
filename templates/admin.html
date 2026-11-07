@@ -175,9 +175,11 @@ tr:hover td{background:#ffffff05}
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
          <form method="POST" action="/admin/membership/{{ user.id }}/approve">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" style="padding:9px 13px;background:#176b42;color:white;border:0;border-radius:7px">ONAYLA</button>
          </form>
          <form method="POST" action="/admin/membership/{{ user.id }}/reject">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" style="padding:9px 13px;background:#812b35;color:white;border:0;border-radius:7px">REDDET</button>
          </form>
         </div>
@@ -200,6 +202,7 @@ tr:hover td{background:#ffffff05}
    </div>
 
    <form method="POST" action="/admin">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="text" name="title" placeholder="Duyuru başlığı" required maxlength="120"
      style="width:100%;padding:14px;margin:12px 0;background:#17151a;color:white;border:1px solid #66512c;border-radius:10px;">
     <textarea name="content" placeholder="Duyuru içeriğini yaz..." required rows="5"
@@ -217,6 +220,7 @@ tr:hover td{background:#ffffff05}
      <p>{{ announcement["content"] }}</p>
      <small>{{ announcement["created_at"] }}</small>
      <form method="POST" action="/admin/announcement/{{ announcement['id'] }}/delete">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" style="margin-top:12px;padding:9px 16px;background:#7d2020;color:white;border:0;border-radius:8px;">
        DUYURUYU SİL
       </button>
@@ -257,6 +261,7 @@ tr:hover td{background:#ffffff05}
        <td>
         <form method="POST" action="/admin/member/{{ user.id }}/update"
               style="display:grid;gap:6px;min-width:180px">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
          <input type="number" name="xp_change" placeholder="XP (+/-)" value="0"
                 style="width:100%;padding:7px;background:#17151a;color:white;border:1px solid #66512c;border-radius:6px">
          <input type="number" name="coin_change" placeholder="Coin (+/-)" value="0"

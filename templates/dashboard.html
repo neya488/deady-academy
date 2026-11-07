@@ -283,6 +283,7 @@ footer{
   <p>Her gün giriş yap. 10 coin ve 25 XP kazan.</p>
  </div>
  <form method="POST" action="/daily-reward">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <button type="submit" {% if daily_claimed %}disabled{% endif %}>
    {% if daily_claimed %}ÖDÜL ALINDI ✓{% else %}ÖDÜLÜMÜ AL →{% endif %}
   </button>

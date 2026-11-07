@@ -66,6 +66,7 @@ button:hover{background:#a855f7}
 <p>👑 {{ user.membership }} ÜYELİK</p>
 
 <form class="upload" method="POST" action="/upload-profile-photo" enctype="multipart/form-data">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 <h3>📸 PROFİL FOTOĞRAFINI DEĞİŞTİR</h3>
 <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required>
 <button type="submit">FOTOĞRAFI YÜKLE</button>
