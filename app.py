@@ -6,6 +6,9 @@ import sqlite3
 from db_layer import get_postgres_db
 import re
 import os
+import json
+import urllib.request
+import urllib.parse
 import secrets
 import hashlib
 import smtplib
@@ -52,6 +55,84 @@ def add_security_headers(response):
         )
 
     return response
+
+
+
+# DEADY ACADEMY - Cloudflare Turnstile güvenliği
+@app.before_request
+def require_security_verification():
+    allowed_endpoints = {
+        "static",
+        "security_check",
+        "verify_security",
+    }
+
+    if request.endpoint in allowed_endpoints:
+        return None
+
+    if not session.get("security_verified"):
+        return redirect(url_for("security_check"))
+
+
+@app.route("/security-check", methods=["GET"])
+def security_check():
+    site_key = os.environ.get("TURNSTILE_SITE_KEY", "")
+    return render_template(
+        "security.html",
+        site_key=site_key,
+        error=None
+    )
+
+
+@app.route("/verify-security", methods=["POST"])
+def verify_security():
+    site_key = os.environ.get("TURNSTILE_SITE_KEY", "")
+    secret_key = os.environ.get("TURNSTILE_SECRET_KEY", "")
+    token = request.form.get("cf-turnstile-response", "")
+
+    if not site_key or not secret_key:
+        return render_template(
+            "security.html",
+            site_key=site_key,
+            error="Güvenlik ayarları sunucuda eksik."
+        ), 503
+
+    if not token:
+        return render_template(
+            "security.html",
+            site_key=site_key,
+            error="Lütfen doğrulamayı tamamla."
+        ), 400
+
+    data = urllib.parse.urlencode({
+        "secret": secret_key,
+        "response": token,
+        "remoteip": request.remote_addr or ""
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        data=data,
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=10) as response:
+            result = json.loads(response.read().decode())
+
+        if result.get("success") is True:
+            session["security_verified"] = True
+            return redirect(url_for("home"))
+
+    except Exception:
+        app.logger.exception("Cloudflare doğrulama hatası")
+
+    return render_template(
+        "security.html",
+        site_key=site_key,
+        error="Doğrulama başarısız. Lütfen tekrar dene."
+    ), 403
+
 
 DB_NAME = "academy.db"
 

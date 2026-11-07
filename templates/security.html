@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY ACADEMY | Security</title>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;min-height:100vh;display:flex;align-items:center;
+    justify-content:center;background:#080812;color:white;
+    font-family:Arial,sans-serif;padding:20px;
+}
+.panel{
+    width:100%;max-width:430px;padding:38px 25px;text-align:center;
+    background:linear-gradient(145deg,#17152b,#0c0b17);
+    border:1px solid #7545bd;border-radius:20px;
+    box-shadow:0 0 45px #6534a533;
+}
+.logo{font-size:29px;font-weight:900;letter-spacing:3px;color:#b68aff}
+.line{height:2px;width:70px;background:#a45cff;margin:18px auto}
+h2{font-size:19px;letter-spacing:2px}
+p{color:#aaa;line-height:1.7;font-size:14px}
+.security{margin:28px auto;display:flex;justify-content:center}
+button{
+    width:100%;padding:14px;border:0;border-radius:9px;
+    background:linear-gradient(90deg,#7138bd,#a34bff);
+    color:white;font-weight:bold;letter-spacing:1px;cursor:pointer;
+}
+.error{color:#ff6868;font-size:13px;margin:15px 0}
+.footer{font-size:10px;color:#666;margin-top:25px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<div class="panel">
+    <div class="logo">DEADY ACADEMY</div>
+    <div class="line"></div>
+    <h2>SECURITY CHECK</h2>
+    <p>Devam etmek için güvenlik doğrulamasını tamamla.</p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if site_key %}
+    <form action="{{ url_for('verify_security') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="security">
+            <div class="cf-turnstile"
+                 data-sitekey="{{ site_key }}"
+                 data-theme="dark">
+            </div>
+        </div>
+        <button type="submit">GÜVENLİĞİ DOĞRULA</button>
+    </form>
+    {% else %}
+    <div class="error">Cloudflare Site Key bulunamadı. Sunucu ayarlarını kontrol et.</div>
+    {% endif %}
+
+    <div class="footer">PROTECTED ACCESS · DEADY</div>
+</div>
+</body>
+</html>
