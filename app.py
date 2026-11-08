@@ -1326,6 +1326,28 @@ def admin_update_member(user_id):
 
     return redirect("/admin")
 
+
+@app.route("/sitemap.xml")
+def sitemap():
+    from flask import Response
+
+    base_url = "https://khaosxapollon.com"
+    pages = ["/", "/login", "/register", "/html-baslangic"]
+
+    urls = "".join(
+        f"<url><loc>{base_url}{page}</loc></url>"
+        for page in pages
+    )
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        + urls +
+        '</urlset>'
+    )
+
+    return Response(xml, mimetype="application/xml")
+
 init_db()
 
 if __name__ == "__main__":
