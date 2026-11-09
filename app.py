@@ -25,6 +25,7 @@ from python_final_data import PYTHON_FINAL
 from javascript_final_data import JAVASCRIPT_FINAL
 
 app = Flask(__name__)
+DB_NAME = os.environ.get("DB_NAME", "academy.db")
 app.secret_key = os.environ.get("SECRET_KEY", "local-development-key")
 app.config["MAX_CONTENT_LENGTH"] = 3 * 1024 * 1024
 app.config["WTF_CSRF_ENABLED"] = True
@@ -314,99 +315,109 @@ courses["python"] = PYTHON_COURSE
 def python_final():
     db = get_db()
     user_id = session["user_id"]
-    completed = db.execute(
-        "SELECT score, correct_answers FROM python_final_completions WHERE user_id = ?",
-        (user_id,)
-    ).fetchone()
 
-    result = None
+    try:
+        completed = db.execute(
+            "SELECT score, correct_answers FROM python_final_completions WHERE user_id = ?",
+            (user_id,)
+        ).fetchone()
 
-    if request.method == "POST":
-        correct = 0
-        blank = 0
+        result = None
 
-        for i, question in enumerate(PYTHON_FINAL):
-            answer = request.form.get(f"q{i}")
+        if request.method == "POST":
+            correct = 0
+            blank = 0
 
-            if answer is None or answer == "":
-                blank += 1
-                continue
+            for i, question in enumerate(PYTHON_FINAL):
+                answer = request.form.get(f"q{i}")
 
-            try:
-                if int(answer) == question["answer"]:
-                    correct += 1
-            except (ValueError, TypeError):
-                pass
+                if answer is None or answer == "":
+                    blank += 1
+                    continue
 
-        wrong = len(PYTHON_FINAL) - correct - blank
-        score = round(correct * 100 / len(PYTHON_FINAL))
-        passed = correct >= 21
-        rewarded = False
+                try:
+                    if int(answer) == question["answer"]:
+                        correct += 1
+                except (ValueError, TypeError):
+                    pass
 
-        if passed and completed is None:
-            try:
-                db.execute("BEGIN IMMEDIATE")
-                db.execute("""
-                    INSERT INTO python_final_completions
-                    (user_id, score, correct_answers, completed_at)
-                    VALUES (?, ?, ?, ?)
-                """, (user_id, score, correct, datetime.now().isoformat(timespec="seconds")))
+            wrong = len(PYTHON_FINAL) - correct - blank
+            score = round(correct * 100 / len(PYTHON_FINAL))
+            passed = correct >= 21
+            rewarded = False
 
-                user = db.execute(
-                    "SELECT xp FROM deady_users WHERE id = ?", (user_id,)
-                ).fetchone()
+            if passed and completed is None:
+                try:
+                    db.execute("BEGIN IMMEDIATE")
 
-                if user is None:
-                    raise ValueError("Kullanıcı bulunamadı.")
+                    user = db.execute(
+                        "SELECT xp FROM deady_users WHERE id = ?",
+                        (user_id,)
+                    ).fetchone()
 
-                new_xp = user["xp"] + 100
-                new_level = (new_xp // 100) + 1
+                    if user is None:
+                        raise ValueError("Kullanıcı bulunamadı.")
 
-                db.execute("""
-                    UPDATE deady_users
-                    SET coins = coins + 50, xp = ?, level = ?
-                    WHERE id = ?
-                """, (new_xp, new_level, user_id))
+                    completed = db.execute(
+                        "SELECT score, correct_answers FROM python_final_completions WHERE user_id = ?",
+                        (user_id,)
+                    ).fetchone()
 
-                db.execute("""
-                    INSERT INTO coin_transactions (user_id, amount, reason)
-                    VALUES (?, 50, ?)
-                """, (user_id, "Python final sınavı ödülü"))
+                    if completed is None:
+                        db.execute("""
+                            INSERT INTO python_final_completions
+                            (user_id, score, correct_answers, completed_at)
+                            VALUES (?, ?, ?, ?)
+                        """, (
+                            user_id,
+                            score,
+                            correct,
+                            datetime.now().isoformat(timespec="seconds")
+                        ))
 
-                award_eligible_badges(db, user_id)
-                db.commit()
-                rewarded = True
-                completed = {"score": score, "correct_answers": correct}
-            except Exception:
-                db.rollback()
-                db.close()
-                raise
+                        new_xp = user["xp"] + 100
+                        new_level = (new_xp // 100) + 1
 
-        elif passed:
-            db.commit()
-        else:
-            db.commit()
+                        db.execute("""
+                            UPDATE deady_users
+                            SET coins = coins + 50, xp = ?, level = ?
+                            WHERE id = ?
+                        """, (new_xp, new_level, user_id))
 
-        result = {
-            "correct": correct,
-            "wrong": wrong,
-            "blank": blank,
-            "score": score,
-            "passed": passed,
-            "rewarded": rewarded,
-            "already_rewarded": passed and not rewarded
-        }
+                        db.execute("""
+                            INSERT INTO coin_transactions
+                            (user_id, amount, reason)
+                            VALUES (?, 50, ?)
+                        """, (user_id, "Python final sınavı ödülü"))
 
-    db.close()
-    return render_template(
-        "python_final.html",
-        questions=PYTHON_FINAL,
-        result=result,
-        completed=completed
-    )
+                        award_eligible_badges(db, user_id)
+                        rewarded = True
 
+                    db.commit()
 
+                except Exception:
+                    db.rollback()
+                    raise
 
+            result = {
+                "correct": correct,
+                "wrong": wrong,
+                "blank": blank,
+                "score": score,
+                "passed": passed,
+                "rewarded": rewarded,
+                "already_rewarded": passed and not rewarded
+            }
+
+        return render_template(
+            "python_final.html",
+            questions=PYTHON_FINAL,
+            result=result,
+            completed=completed
+        )
+
+    finally:
+        db.close()
 
 
 @app.route("/javascript-final", methods=["GET", "POST"])
@@ -415,104 +426,109 @@ def javascript_final():
     db = get_db()
     user_id = session["user_id"]
 
-    completed = db.execute(
-        "SELECT score, correct_answers FROM javascript_final_completions WHERE user_id = ?",
-        (user_id,)
-    ).fetchone()
+    try:
+        completed = db.execute(
+            "SELECT score, correct_answers FROM javascript_final_completions WHERE user_id = ?",
+            (user_id,)
+        ).fetchone()
 
-    result = None
+        result = None
 
-    if request.method == "POST":
-        correct = 0
-        blank = 0
+        if request.method == "POST":
+            correct = 0
+            blank = 0
 
-        for i, question in enumerate(JAVASCRIPT_FINAL):
-            answer = request.form.get(f"q{i}")
+            for i, question in enumerate(JAVASCRIPT_FINAL):
+                answer = request.form.get(f"q{i}")
 
-            if answer is None or answer == "":
-                blank += 1
-                continue
+                if answer is None or answer == "":
+                    blank += 1
+                    continue
 
-            try:
-                if int(answer) == question["answer"]:
-                    correct += 1
-            except (ValueError, TypeError):
-                pass
+                try:
+                    if int(answer) == question["answer"]:
+                        correct += 1
+                except (ValueError, TypeError):
+                    pass
 
-        wrong = len(JAVASCRIPT_FINAL) - correct - blank
-        score = round(correct * 100 / len(JAVASCRIPT_FINAL))
-        passed = correct >= 21
-        rewarded = False
+            wrong = len(JAVASCRIPT_FINAL) - correct - blank
+            score = round(correct * 100 / len(JAVASCRIPT_FINAL))
+            passed = correct >= 21
+            rewarded = False
 
-        if passed and completed is None:
-            try:
-                db.execute("BEGIN IMMEDIATE")
+            if passed and completed is None:
+                try:
+                    db.execute("BEGIN IMMEDIATE")
 
-                db.execute("""
-                    INSERT INTO javascript_final_completions
-                    (user_id, score, correct_answers, completed_at)
-                    VALUES (?, ?, ?, ?)
-                """, (
-                    user_id,
-                    score,
-                    correct,
-                    datetime.now().isoformat(timespec="seconds")
-                ))
+                    user = db.execute(
+                        "SELECT xp FROM deady_users WHERE id = ?",
+                        (user_id,)
+                    ).fetchone()
 
-                user = db.execute(
-                    "SELECT xp FROM deady_users WHERE id = ?",
-                    (user_id,)
-                ).fetchone()
+                    if user is None:
+                        raise ValueError("Kullanıcı bulunamadı.")
 
-                if user is None:
-                    raise ValueError("Kullanıcı bulunamadı.")
+                    completed = db.execute(
+                        "SELECT score, correct_answers FROM javascript_final_completions WHERE user_id = ?",
+                        (user_id,)
+                    ).fetchone()
 
-                new_xp = user["xp"] + 100
-                new_level = (new_xp // 100) + 1
+                    if completed is None:
+                        db.execute("""
+                            INSERT INTO javascript_final_completions
+                            (user_id, score, correct_answers, completed_at)
+                            VALUES (?, ?, ?, ?)
+                        """, (
+                            user_id,
+                            score,
+                            correct,
+                            datetime.now().isoformat(timespec="seconds")
+                        ))
 
-                db.execute("""
-                    UPDATE deady_users
-                    SET coins = coins + 50, xp = ?, level = ?
-                    WHERE id = ?
-                """, (new_xp, new_level, user_id))
+                        new_xp = user["xp"] + 100
+                        new_level = (new_xp // 100) + 1
 
-                db.execute("""
-                    INSERT INTO coin_transactions (user_id, amount, reason)
-                    VALUES (?, 50, ?)
-                """, (user_id, "JavaScript final sınavı ödülü"))
+                        db.execute("""
+                            UPDATE deady_users
+                            SET coins = coins + 50, xp = ?, level = ?
+                            WHERE id = ?
+                        """, (new_xp, new_level, user_id))
 
-                award_eligible_badges(db, user_id)
-                db.commit()
+                        db.execute("""
+                            INSERT INTO coin_transactions
+                            (user_id, amount, reason)
+                            VALUES (?, 50, ?)
+                        """, (user_id, "JavaScript final sınavı ödülü"))
 
-                rewarded = True
-                completed = {
-                    "score": score,
-                    "correct_answers": correct
-                }
+                        award_eligible_badges(db, user_id)
+                        rewarded = True
 
-            except Exception:
-                db.rollback()
-                db.close()
-                raise
+                    db.commit()
 
-        result = {
-            "correct": correct,
-            "wrong": wrong,
-            "blank": blank,
-            "score": score,
-            "passed": passed,
-            "rewarded": rewarded,
-            "already_rewarded": passed and not rewarded
-        }
+                except Exception:
+                    db.rollback()
+                    raise
 
-    db.close()
+            result = {
+                "correct": correct,
+                "wrong": wrong,
+                "blank": blank,
+                "score": score,
+                "passed": passed,
+                "rewarded": rewarded,
+                "already_rewarded": passed and not rewarded
+            }
 
-    return render_template(
-        "javascript_final.html",
-        questions=JAVASCRIPT_FINAL,
-        result=result,
-        completed=completed
-    )
+        return render_template(
+            "javascript_final.html",
+            questions=JAVASCRIPT_FINAL,
+            result=result,
+            completed=completed
+        )
+
+    finally:
+        db.close()
+
 
 
 @app.route("/forgot-password", methods=["GET", "POST"])

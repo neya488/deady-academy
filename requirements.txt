@@ -1,5 +1,5 @@
 Flask
+Flask-WTF>=1.2,<2
 gunicorn
 Pillow
 pg8000==1.31.6
-Flask-WTF>=1.2,<2
