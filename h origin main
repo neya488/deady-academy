@@ -1,0 +1,52 @@
+[1mdiff --git a/app.py b/app.py[m
+[1mindex 5f1d75f..9ff33fe 100644[m
+[1m--- a/app.py[m
+[1m+++ b/app.py[m
+[36m@@ -790,16 +790,42 @@[m [mdef logout():[m
+ @admin_required[m
+ def admin():[m
+     db = get_db()[m
+[31m-    users = db.execute([m
+[31m-        "SELECT id, username, membership FROM deady_users ORDER BY id DESC"[m
+[31m-    ).fetchall()[m
+[31m-    total_users = len(users)[m
+[32m+[m
+[32m+[m[32m    users = db.execute("""[m
+[32m+[m[32m        SELECT id, username, membership, pending_membership,[m
+[32m+[m[32m               coins, xp, level[m
+[32m+[m[32m        FROM deady_users[m
+[32m+[m[32m        ORDER BY id DESC[m
+[32m+[m[32m    """).fetchall()[m
+[32m+[m
+[32m+[m[32m    stats = db.execute("""[m
+[32m+[m[32m        SELECT[m
+[32m+[m[32m            COUNT(*) AS total_users,[m
+[32m+[m[32m            COALESCE(SUM(xp), 0) AS total_xp,[m
+[32m+[m[32m            COALESCE(SUM(coins), 0) AS total_coins,[m
+[32m+[m[32m            COALESCE(SUM([m
+[32m+[m[32m                CASE WHEN pending_membership IS NOT NULL[m
+[32m+[m[32m                AND pending_membership != '' THEN 1 ELSE 0 END[m
+[32m+[m[32m            ), 0) AS pending_count[m
+[32m+[m[32m        FROM deady_users[m
+[32m+[m[32m    """).fetchone()[m
+[32m+[m
+[32m+[m[32m    membership_counts = db.execute("""[m
+[32m+[m[32m        SELECT membership, COUNT(*) AS total[m
+[32m+[m[32m        FROM deady_users[m
+[32m+[m[32m        GROUP BY membership[m
+[32m+[m[32m    """).fetchall()[m
+[32m+[m
+     db.close()[m
+ [m
+     return render_template([m
+         "admin.html",[m
+         users=users,[m
+[31m-        total_users=total_users[m
+[32m+[m[32m        total_users=stats["total_users"],[m
+[32m+[m[32m        total_xp=stats["total_xp"],[m
+[32m+[m[32m        total_coins=stats["total_coins"],[m
+[32m+[m[32m        pending_count=stats["pending_count"],[m
+[32m+[m[32m        membership_counts=membership_counts[m
+     )[m
+ [m
+ init_db()[m

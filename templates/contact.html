@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEADY ACADEMY | Contact</title>
+<meta name="description" content="DEADY ACADEMY resmi iletişim ve sosyal medya sayfası.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{--red:#ff172e;--bg:#050505;--panel:#0c0c0e;--line:#342024}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:var(--bg);color:#fff;
+ font-family:Inter,Arial,sans-serif;
+ background-image:
+ radial-gradient(ellipse at 55% 30%,#38070d55,transparent 45%),
+ radial-gradient(ellipse at 90% 80%,#65000c22,transparent 35%);
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.topbar{
+ height:76px;padding:0 5%;display:flex;align-items:center;
+ justify-content:space-between;border-bottom:1px solid #ffffff18;
+ background:#050505d9;position:sticky;top:0;z-index:10;
+ backdrop-filter:blur(15px)
+}
+.brand{font-family:Cinzel,serif;font-size:24px;font-weight:800;letter-spacing:3px}
+.brand span{color:var(--red)}
+.nav{display:flex;gap:28px;color:#aaa;font-size:13px}
+.nav a:hover{color:#fff}
+.nav .active{color:var(--red)}
+.login{
+ border:1px solid var(--red);padding:11px 19px;
+ color:white;border-radius:5px;box-shadow:0 0 15px #ff172e22
+}
+.layout{display:grid;grid-template-columns:88px 1fr;min-height:calc(100vh - 76px)}
+.sidebar{
+ border-right:1px solid #ffffff16;padding:25px 8px;
+ display:flex;flex-direction:column;align-items:center;gap:25px;
+ background:#080808
+}
+.sideitem{
+ width:68px;min-height:66px;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:7px;
+ color:#888;font-size:10px;border-radius:7px;transition:.25s
+}
+.sideitem b{font-size:22px;font-weight:400}
+.sideitem:hover,.sideitem.active{
+ color:white;background:#25090d;border:1px solid #a80b20;
+ box-shadow:0 0 18px #ff172e33
+}
+.main{padding:35px 4% 20px;max-width:1600px;width:100%;margin:auto}
+.hero{
+ display:grid;grid-template-columns:1.1fr .9fr;
+ gap:35px;align-items:center;min-height:510px
+}
+.visual{
+ min-height:470px;position:relative;display:flex;
+ flex-direction:column;justify-content:center;align-items:center;
+ overflow:hidden;text-align:center;
+ background:
+ radial-gradient(ellipse at 50% 45%,#6d101d55,transparent 40%),
+ linear-gradient(145deg,#111,#050505 60%);
+ border:1px solid #35151a;
+}
+.visual:before,.visual:after{
+ content:"";position:absolute;width:280px;height:280px;
+ border:1px solid #ff172e44;border-radius:50%;
+ box-shadow:0 0 65px #ff172e16,inset 0 0 55px #ff172e12
+}
+.visual:after{width:370px;height:370px;border-color:#ffffff12}
+.crown{font-size:65px;color:var(--red);filter:drop-shadow(0 0 20px #ff172e)}
+.hero-title{
+ font-family:Cinzel,serif;font-size:clamp(48px,7vw,100px);
+ line-height:.95;letter-spacing:-3px;margin:15px 0;
+ text-shadow:0 0 25px #ff172e55;position:relative;z-index:1
+}
+.hero-title span{display:block;color:var(--red);font-size:.53em;letter-spacing:13px;margin-top:14px}
+.tagline{letter-spacing:5px;font-size:11px;color:#aaa;margin-top:25px}
+.description{max-width:460px;color:#aaa;line-height:1.8;font-size:14px}
+.red-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:12px;
+ background:linear-gradient(100deg,#8b0012,#f01830,#8b0012);
+ color:white;padding:15px 24px;border:1px solid #ff5364;
+ border-radius:4px;font-weight:700;letter-spacing:1px;
+ box-shadow:0 0 25px #ff172e33;cursor:pointer;transition:.25s
+}
+.red-button:hover{transform:translateY(-3px);box-shadow:0 0 35px #ff172e77}
+.contact{
+ padding:27px;background:#09090bee;border:1px solid #57121e;
+ position:relative;box-shadow:0 0 45px #000
+}
+.contact:before{
+ content:"";position:absolute;inset:7px;border:1px solid #ffffff12;
+ pointer-events:none
+}
+.contact h2{font-family:Cinzel,serif;font-size:27px;margin:0 0 8px}
+.contact .sub{color:#999;font-size:13px;margin-bottom:24px}
+.field{margin-bottom:14px}
+.field label{display:block;color:#aaa;font-size:11px;letter-spacing:2px;margin-bottom:8px}
+.field input,.field select,.field textarea{
+ width:100%;background:#050505;color:white;border:1px solid #393034;
+ padding:15px;border-radius:4px;outline:none;font:inherit;font-size:13px
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 12px #ff172e22}
+.field textarea{height:105px;resize:vertical}
+.contact .red-button{width:100%}
+.social-section{margin-top:40px}
+.section-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
+.section-heading h3{font-family:Cinzel,serif;letter-spacing:2px;font-size:17px}
+.section-heading span{color:#777;font-size:10px;letter-spacing:2px}
+.social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.social-card{
+ display:flex;align-items:center;gap:13px;padding:19px 15px;
+ background:linear-gradient(135deg,#151012,#080808);
+ border:1px solid #382127;transition:.25s;min-width:0
+}
+.social-card:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 8px 25px #ff172e20}
+.social-icon{
+ width:42px;height:42px;display:grid;place-items:center;
+ border:1px solid #74202b;color:var(--red);font-size:20px;border-radius:50%;
+ flex-shrink:0
+}
+.social-card small{display:block;color:#777;font-size:9px;letter-spacing:1.5px;margin-bottom:5px}
+.social-card strong{font-size:13px;overflow-wrap:anywhere}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px}
+.info-panel{
+ background:#0b0b0b;border:1px solid #292020;padding:22px
+}
+.info-panel h3{font-family:Cinzel,serif;margin:0 0 15px;font-size:15px}
+.info-panel p{color:#888;font-size:12px;line-height:1.8;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat{border-right:1px solid #332126}
+.stat:last-child{border:0}
+.stat strong{display:block;color:var(--red);font-size:23px;font-family:Cinzel,serif}
+.stat span{color:#888;font-size:10px}
+.footer{
+ border-top:1px solid #ffffff18;margin-top:35px;padding:22px 0;
+ display:flex;justify-content:space-between;align-items:center;gap:15px;
+ color:#777;font-size:11px
+}
+.signature{font-family:cursive;color:var(--red);font-size:25px}
+@media(max-width:900px){
+ .hero{grid-template-columns:1fr}
+ .visual{min-height:390px}
+ .social-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+ .topbar{height:65px;padding:0 15px}
+ .brand{font-size:18px}
+ .nav{display:none}
+ .layout{grid-template-columns:1fr}
+ .sidebar{
+  order:2;position:fixed;bottom:0;left:0;right:0;height:65px;
+  z-index:20;flex-direction:row;justify-content:space-around;
+  padding:4px;border-right:0;border-top:1px solid #4b1720
+ }
+ .sideitem{width:auto;min-height:52px;flex:1;font-size:9px}
+ .sideitem b{font-size:19px}
+ .main{padding:18px 13px 85px}
+ .visual{min-height:330px}
+ .hero-title{font-size:53px}
+ .hero-title span{letter-spacing:8px}
+ .contact{padding:20px 15px}
+ .social-grid{gap:8px}
+ .social-card{padding:12px 9px;gap:8px}
+ .social-icon{width:34px;height:34px;font-size:16px}
+ .social-card strong{font-size:11px}
+ .bottom-grid{grid-template-columns:1fr}
+ .footer{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+ <a class="brand" href="/">DEADY<span>®</span></a>
+ <nav class="nav">
+  <a href="/">Ana Sayfa</a>
+  <a href="/dashboard">Eğitimler</a>
+  <a href="/#hakkimizda">Hakkımızda</a>
+  <a class="active" href="/contact">İletişim</a>
+ </nav>
+ <a class="login" href="/login">Giriş Yap ↗</a>
+</header>
+
+<div class="layout">
+ <aside class="sidebar">
+  <a class="sideitem" href="/"><b>⌂</b>Ana Sayfa</a>
+  <a class="sideitem" href="/dashboard"><b>▤</b>Eğitimler</a>
+  <a class="sideitem" href="/#hakkimizda"><b>♙</b>Hakkımızda</a>
+  <a class="sideitem active" href="/contact"><b>➤</b>İletişim</a>
+  <a class="sideitem" href="/dashboard"><b>♟</b>Topluluk</a>
+ </aside>
+
+ <main class="main">
+  <section class="hero">
+   <div class="visual">
+    <div class="crown">♛</div>
+    <h1 class="hero-title">DEADY<span>ACADEMY</span></h1>
+    <div class="tagline">KENDİNİ GELİŞTİR · GELECEĞİNİ KODLA</div>
+    <p class="description">
+     DEADY ACADEMY, yazılım ve teknoloji dünyasında
+     kendini geliştirmek isteyenler için bağımsız bir dijital eğitim platformudur.
+    </p>
+    <a class="red-button" href="/dashboard">EĞİTİMLERE GÖZ AT ↗</a>
+   </div>
+
+   <form class="contact" id="contactForm">
+    <h2>♛ BİZE ULAŞIN</h2>
+    <div class="sub">Her türlü soru, öneri ve destek için buradayız.</div>
+    <div class="field">
+     <label>ADIN SOYADIN</label>
+     <input id="name" required maxlength="80" placeholder="Adınız Soyadınız">
+    </div>
+    <div class="field">
+     <label>E-POSTA ADRESİN</label>
+     <input id="email" type="email" required maxlength="120" placeholder="E-posta adresiniz">
+    </div>
+    <div class="field">
+     <label>KONU</label>
+     <select id="subject" required>
+      <option value="">Bir konu seçin</option>
+      <option>Genel Bilgi</option>
+      <option>Eğitimler</option>
+      <option>Üyelik ve Destek</option>
+      <option>İş Birliği</option>
+      <option>Diğer</option>
+     </select>
+    </div>
+    <div class="field">
+     <label>MESAJIN</label>
+     <textarea id="message" required maxlength="1500" placeholder="Mesajınızı buraya yazın..."></textarea>
+    </div>
+    <button class="red-button" type="submit">➤ &nbsp; WHATSAPP İLE MESAJ GÖNDER</button>
+    <p style="color:#777;font-size:10px;line-height:1.6">
+     Gönder butonuna bastığınızda WhatsApp açılır ve mesajınız hazır hâle gelir.
+    </p>
+   </form>
+  </section>
+
+  <section class="social-section">
+   <div class="section-heading">
+    <h3>SOSYAL MEDYA</h3>
+    <span>02 / CONNECT WITH US</span>
+   </div>
+   <div class="social-grid">
+    <a class="social-card" href="https://t.me/dertvar" target="_blank" rel="noopener">
+     <div class="social-icon">➤</div>
+     <div><small>TELEGRAM</small><strong>@dertvar</strong></div>
+    </a>
+    <a class="social-card" href="https://www.tiktok.com/@1deady" target="_blank" rel="noopener">
+     <div class="social-icon">♪</div>
+     <div><small>TIKTOK</small><strong>@1deady</strong></div>
+    </a>
+    <a class="social-card" href="https://www.instagram.com/en6sp/" target="_blank" rel="noopener">
+     <div class="social-icon">◎</div>
+     <div><small>INSTAGRAM</small><strong>@en6sp</strong></div>
+    </a>
+    <a class="social-card" href="https://wa.me/905515072738" target="_blank" rel="noopener">
+     <div class="social-icon">◉</div>
+     <div><small>WHATSAPP</small><strong>Mesaj gönder</strong></div>
+    </a>
+   </div>
+  </section>
+
+  <section class="bottom-grid">
+   <div class="info-panel" id="hakkimizda">
+    <h3>ENES ÇOLAK — FOUNDER</h3>
+    <p>
+     DEADY ACADEMY; Python, HTML, CSS, JavaScript ve web geliştirme
+     alanlarında öğrenmeyi ve gelişimi desteklemeyi amaçlayan bağımsız
+     bir dijital eğitim platformudur.
+    </p>
+   </div>
+   <div class="info-panel">
+    <h3>OUR PHILOSOPHY</h3>
+    <div class="stats">
+     <div class="stat"><strong>01</strong><span>ÖĞREN</span></div>
+     <div class="stat"><strong>02</strong><span>KODLA</span></div>
+     <div class="stat"><strong>03</strong><span>GELİŞ</span></div>
+    </div>
+   </div>
+  </section>
+
+  <footer class="footer">
+   <span>© 2026 DEADY ACADEMY · Tüm hakları saklıdır.</span>
+   <span>LEARN. CODE. CREATE.</span>
+   <span class="signature">Enes Çolak</span>
+  </footer>
+ </main>
+</div>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e){
+ e.preventDefault();
+
+ const name = document.getElementById("name").value.trim();
+ const email = document.getElementById("email").value.trim();
+ const subject = document.getElementById("subject").value;
+ const message = document.getElementById("message").value.trim();
+
+ if(!name || !email || !subject || !message){
+  alert("Lütfen tüm alanları doldurun.");
+  return;
+ }
+
+ const text =
+  "DEADY ACADEMY İLETİŞİM MESAJI%0A%0A" +
+  "Ad Soyad: " + encodeURIComponent(name) + "%0A" +
+  "E-posta: " + encodeURIComponent(email) + "%0A" +
+  "Konu: " + encodeURIComponent(subject) + "%0A" +
+  "Mesaj: " + encodeURIComponent(message);
+
+ window.open("https://wa.me/905515072738?text=" + text, "_blank");
+});
+</script>
+</body>
+</html>
